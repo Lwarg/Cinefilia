@@ -11,6 +11,6 @@ db = mysql.connector.connect(
 mycursor = db.cursor()
 
 mycursor.execute("CREATE TABLE Utente (username VARCHAR(20) PRIMARY KEY NOT NULL, password VARCHAR(20) NOT NULL)")
-mycursor.execute("CREATE TABLE Film (user VARCHAR(20) PRIMARY KEY NOT NULL, Titolo VARCHAR(200) NOT NULL)")
+mycursor.execute("CREATE TABLE Film (idFilm INT PRIMARY KEY NOT NULL, user VARCHAR(20) NOT NULL)")
 
 db.close()
