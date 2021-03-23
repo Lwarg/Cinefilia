@@ -57,7 +57,7 @@ global apikey
 
 
 username = "luca"
-apikey = "Insert valid API"
+apikey = "8ca5768b&"
 
 
 # finestra

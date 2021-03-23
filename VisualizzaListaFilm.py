@@ -3,7 +3,7 @@ import json
 # Funzione per visualizzare la lista dei film
 
 # accedo al database
-elencoFilm = open("elencoFIlm.txt")
+elencoFilm = open("elencoFilm.txt")
 
 # richiesta titolo film tramite API
 apikey = "Inserire API valida" # 1000 requests al giorno
