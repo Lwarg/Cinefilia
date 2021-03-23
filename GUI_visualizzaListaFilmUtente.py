@@ -43,10 +43,9 @@ def visualizzaListaFilm(user):
         # foto = tk.PhotoImage(data=immagine_b64)
         # r = requests.get(data['Poster'])
         # im = Image.open(io.BytesIO(r.content))
-        # im.save(im, format='JPEG')
+        #img.save(im, format='JPEG')
         # immagine = im.getbuffer()
-        panel = tk.Label(root, image=img)
-        txtbox_possibiliFilm.insert(tk.END, panel.pack(side="bottom", fill="both", expand="yes"))
+        txtbox_possibiliFilm.image_create(tk.END, image=img)
         # cv = tk.Canvas(bg='white')
         # cv.pack(side='top', fill='both', expand='yes')
         # cv.create_image(10, 10, image=foto, anchor='nw')
@@ -72,7 +71,7 @@ root = tk.Tk()
 textVar = []
 testo_possibiliFilm = ""
 textVar.append(tk.StringVar())
-txtbox_possibiliFilm = tk.Text(root, height=10, width=100)
+txtbox_possibiliFilm = tk.Text(root, height=100, width=100)
 txtbox_possibiliFilm.configure(state='disabled')
 txtbox_possibiliFilm.grid(column=0, row=2)
 
