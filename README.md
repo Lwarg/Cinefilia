@@ -12,3 +12,4 @@ CONTENUTO REPOSITORY:
 - CercaInfoNuovoFilm.py : codice per selezionare un film da elencoFilm.txt e restituire la scheda tecnica
 - creazioneDatabase.py : codice per connettersi al database e per creare le tabelle Utente e Film (da utilizzare solo una volta)
 - registrazioneUtente.py: codice che permette all'utente di registrarsi nel database inserendo username e password
+- GUI*.py : codice generazione gui per singole funzioni (andranno unite in un'unica GUI)

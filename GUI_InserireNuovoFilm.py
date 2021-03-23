@@ -90,6 +90,7 @@ username = "luca"
 apikey = "Insert valid API"
 path = ""
 
+
 # finestra
 root = tk.Tk()
 
