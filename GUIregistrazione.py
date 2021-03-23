@@ -5,6 +5,18 @@ import tkinter as tk
 # funzione corrispondente al bottone registerbtn (per registrare un nuovo utente)
 def register(user, DBpath):
     # l'username viene appeso nel file users.txt che si trova nella cartella sincronizzata con google drive
+    flag = 0
+    fileTestoLettura = open(''+ DBpath +'/users.txt','r')
+    fileTestoScrittura = open(''+ DBpath +'/users.txt','a')
+    for riga in fileTestoLettura:
+        if riga.strip() == user:
+            flag = 1
+    if flag == 0:
+        fileTestoScrittura.write("" + user + "\n")
+        nuovoFileTesto = open('' + DBpath + '/elencoFilmdi' + user + '.txt','w')
+    else:
+        print("Username già presente")
+        print("Inserisci nuova username")
     print(user)
     print(DBpath)
 
