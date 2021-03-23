@@ -13,7 +13,8 @@ def stampaPossibiliFilm(user, film):
 
     # rendo scrivibile il textbox
     txtbox_possibiliFilm.configure(state='normal')
-    testo_possibiliFilm = ""
+    txtbox_possibiliFilm.insert(tk.END, "cercando film...")
+    txtbox_possibiliFilm.delete("1.0","end")
 
     # ricerco il film tramite API
     url = "http://www.omdbapi.com/?s="+film+"&apikey="+apikey
