@@ -8,11 +8,12 @@ film = input("Inserire il titolo del film: ")  # diventa casella di inserimento 
 
 
 # ricerca film tramite API
-apikey = "Insert a valid API" # 1000 requests al giorno
+apikey = "Inserire API valida" # 1000 requests al giorno
 url = "http://www.omdbapi.com/?s="+film+"&apikey="+apikey
 response = requests.request("GET", url)
 # print(response)
 data = json.loads(response.text)
+
 
 try: # se la ricerca tramite API ha funzionato senza errori
 
@@ -29,11 +30,10 @@ try: # se la ricerca tramite API ha funzionato senza errori
 
         # L'utente seleziona il film desiderato tra quelli trovati inserendo il codice numerico corrispondente
         codice = int(input("Inserire il codice del film desiderato: "))
-        film_scelto = possibili_film[codice-1]
-        print(film_scelto)
+        film_scelto = data['Search'][codice-1]['imdbID']
 
-        # ricerca film tramite API
-        url = "http://www.omdbapi.com/?t="+film_scelto+"&apikey="+apikey
+        # ricerca film tramite API usando l'ID del film
+        url = "http://www.omdbapi.com/?i="+film_scelto+"&apikey="+apikey
         response = requests.request("GET", url)
         data = json.loads(response.text)
 

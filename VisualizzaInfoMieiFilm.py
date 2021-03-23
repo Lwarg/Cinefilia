@@ -6,45 +6,48 @@ import json
 # accedo al database
 elencoFilm = open("elencoFIlm.txt")
 
+# accedo al database
+elencoFilm = open("elencoFIlm.txt")
+
+# richiesta titolo film tramite API
+apikey = "Inserire API valida" # 1000 requests al giorno
+
 # restituisco in output i film visti dall'ultimo al primo
 listaFilm = []
 count = 1
 for film in reversed(list(elencoFilm)):
-    listaFilm.append(film[:-1])
-    print(count,"-",film[:-1])
+    url = "http://www.omdbapi.com/?i="+film[:-1]+"&apikey="+apikey
+    response = requests.request("GET", url)
+    # print(response)
+    data = json.loads(response.text)
+    listaFilm.append(data)
+    print(count,"-",data['Title'])
     count +=1
 
 # L'utente inserisce inserisce il codice per selezionare il film di cui vuole le info
 codice = int(input("Inserire il numero del film: "))
-film = listaFilm[codice-1]
 
-# ricerca film tramite API
-apikey = "Insert a valid API" # 1000 requests al giorno
-url = "http://www.omdbapi.com/?t="+film+"&apikey="+apikey
-response = requests.request("GET", url)
-# print(response)
-data = json.loads(response.text)
 
 # restituisco il titolo
-print("Titolo:",data['Title'])
+print("Titolo:",listaFilm[codice-1]['Title'])
 
 # restituisco l'anno
-print("Anno:",data['Year'])
+print("Anno:",listaFilm[codice-1]['Year'])
 
 # durata
-print("Durata:",data['Runtime'])
+print("Durata:",listaFilm[codice-1]['Runtime'])
 
 # genere
-print("Genere:",data['Genre'])
+print("Genere:",listaFilm[codice-1]['Genre'])
 
 # restituisco il regista
-print("Regia:",data['Director'])
+print("Regia:",listaFilm[codice-1]['Director'])
 
 # restituisco il cast
-print("Cast:",data['Actors'])
+print("Cast:",listaFilm[codice-1]['Actors'])
 
 # restituisco la trama
-print("Trama:",data['Plot'])
+print("Trama:",listaFilm[codice-1]['Plot'])
 
 
 
