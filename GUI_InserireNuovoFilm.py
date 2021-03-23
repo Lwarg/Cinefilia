@@ -58,6 +58,7 @@ global apikey
 username = "luca"
 apikey = "Insert valid API"
 
+
 # finestra
 root = tk.Tk()
 
