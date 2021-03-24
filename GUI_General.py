@@ -29,6 +29,7 @@ def register(user, DBpath):
     if not userGiaPresente:
         fileTestoScrittura.write("" + user + "\n")
         nuovoFileTesto = open('' + DBpath + '/elencoFilmdi' + user + '.txt','w')
+        nuovoFileListaAmici = open(''+ DBpath + '/amicidi'+ user + '.txt', 'w')
         txtbox_outputregistrazione.insert(tk.END,user+" registrato correttamente")
     else: 
         txtbox_outputregistrazione.insert(tk.END,"Username già presente")
@@ -289,13 +290,13 @@ def visualizzaListaFilm():
         data = json.loads(response.text)
         testo = str(count)+" - "+ data['Title'] + "\n"
         txtbox_mieiFilm.insert(tk.END, testo)
-        #url_immagine = ""+ data ['Poster'] + ""
-        #response = requests.get(url_immagine)
-        #img_data = response.content
-        #img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
-        #immagine = tk.Label(image=img)
-        #immagine.image = img
-        #immagine.place(x=500, y=count*100)
+        url_immagine = ""+ data ['Poster'] + ""
+        response = requests.get(url_immagine)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
+        immagine = tk.Label(image=img)
+        immagine.image = img
+        immagine.place(x=500, y=count*100)
         count +=1
 
     # riblocco la scrivibilità del textbox
