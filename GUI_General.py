@@ -2,6 +2,7 @@ import tkinter as tk
 import requests
 import json
 import io
+import operator
 from tkinter import ttk
 from PIL import Image,ImageTk
 
@@ -28,6 +29,7 @@ def register(user, DBpath):
     if not userGiaPresente:
         fileTestoScrittura.write("" + user + "\n")
         nuovoFileTesto = open('' + DBpath + '/elencoFilmdi' + user + '.txt','w')
+        nuovoFileListaAmici = open(''+ DBpath + '/amicidi'+ user + '.txt', 'w')
         txtbox_outputregistrazione.insert(tk.END,user+" registrato correttamente")
     else: 
         txtbox_outputregistrazione.insert(tk.END,"Username già presente")
@@ -44,42 +46,41 @@ def login(user, DBpath):
     txtbox_outputlogin.insert(tk.END, "accesso in corso...")
     txtbox_outputlogin.delete("1.0","end")
 
-    try:
-        database = DBpath
-        # l'username viene appeso nel file users.txt che si trova nella cartella sincronizzata con google drive
-        userEsistente = False
-        utenti = open(''+ DBpath +'/users.txt','r')
-        for riga in utenti:
-            if riga.strip() == user:
-                userEsistente = True
-                txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
-                utente = user
-
-                # carico i dati dell'utente
-                visualizzaListaFilm()
-                visualizzaStatistiche()
-
-                # attivo tutti i bottoni e i campi di inserimento
-                entry_newMovie.configure(state='normal')
-                entry_newMovie.configure(state='normal')
-                searchFilmbtn.configure(state='normal')
-                logoutbtn.configure(state='normal')
-                loginbtn.configure(state='disabled')
-                break
-        if not userEsistente:
-            txtbox_outputlogin.insert(tk.END,"Utente non esistente, registrati")
-            entry_newMovie.configure(state='disabled')
-            entry_newMovie.configure(state='disabled')
-            searchFilmbtn.configure(state='disabled')
-            txtbox_schedaTec.configure(state='disabled')
-            entry_codice.configure(state='disabled')
-            addFilmbtn.configure(state='disabled')
-            schedaTecnicabtn.configure(state='disabled')
-
-    except:
-        txtbox_outputlogin.insert(tk.END,"Database not found")
-    finally:
-        txtbox_outputlogin.configure(state='disabled')
+#try:
+    database = DBpath
+    # l'username viene appeso nel file users.txt che si trova nella cartella sincronizzata con google drive
+    userEsistente = False
+    utenti = open(''+ DBpath +'/users.txt','r')
+    for riga in utenti:
+        if riga.strip() == user:
+            userEsistente = True
+            utente = user
+            # carico i dati dell'utente
+            visualizzaListaFilm()
+            visualizzaStatistiche()
+            # attivo tutti i bottoni e i campi di inserimento
+            entry_newMovie.configure(state='normal')
+            entry_newMovie.configure(state='normal')
+            searchFilmbtn.configure(state='normal')
+            logoutbtn.configure(state='normal')
+            loginbtn.configure(state='disabled')
+            # messaggio di output all'utente
+            txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
+            break
+    
+    if not userEsistente:
+        txtbox_outputlogin.insert(tk.END,"Utente non esistente, registrati")
+        entry_newMovie.configure(state='disabled')
+        entry_newMovie.configure(state='disabled')
+        searchFilmbtn.configure(state='disabled')
+        txtbox_schedaTec.configure(state='disabled')
+        entry_codice.configure(state='disabled')
+        addFilmbtn.configure(state='disabled')
+        schedaTecnicabtn.configure(state='disabled')
+#except:
+#    txtbox_outputlogin.insert(tk.END,"Errore di accesso")
+#finally:
+#    txtbox_outputlogin.configure(state='disabled')
 
 
 ###################################################################################################################
@@ -268,6 +269,7 @@ def visualizzaListaFilm():
     global database
     global utente
     global apikey
+    global img
 
     # rendo scrivibile il textbox
     txtbox_mieiFilm.configure(state='normal')
@@ -289,12 +291,14 @@ def visualizzaListaFilm():
         data = json.loads(response.text)
         testo = str(count)+" - "+ data['Title'] + "\n"
         txtbox_mieiFilm.insert(tk.END, testo)
-        #url_immagine = ""+ data ['Poster'] + ""
-        #response = requests.get(url_immagine)
-        #img_data = response.content
-        #img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
-        #immagine = tk.Label(image=img)
-        #immagine.image = img
+        url_immagine = ""+ data ['Poster'] + ""
+        response = requests.get(url_immagine)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
+        immagine = tk.Label(image=img)
+        immagine.image = img
+        txtbox_mieiFilm.image_create(tk.END, image=img)
+        txtbox_mieiFilm.insert(tk.END, "\n")
         #immagine.place(x=500, y=count*100)
         count +=1
 
@@ -362,6 +366,60 @@ def visualizzaStatistiche():
     durata = int(durata/60*100)/100
     txtbox_statistiche.insert(tk.END,"Tempo totale a guardare film: "+str(durata)+" ore\n")
 
+    # genere più visto
+    primoGenere = max(generi.items(), key=operator.itemgetter(1))[0]
+    film_primoGenere = generi[primoGenere]
+    generi.pop(primoGenere)
+
+    secondoGenere = max(generi.items(), key=operator.itemgetter(1))[0]
+    film_secondoGenere = generi[secondoGenere]
+    generi.pop(secondoGenere)
+
+    terzoGenere = max(generi.items(), key=operator.itemgetter(1))[0]
+    film_terzoGenere = generi[terzoGenere]
+    generi.pop(terzoGenere)
+
+    txtbox_statistiche.insert(tk.END, "\n GENERI PREFERITI \n")
+    txtbox_statistiche.insert(tk.END, primoGenere + ": "+ str(film_primoGenere) +" film\n")
+    txtbox_statistiche.insert(tk.END, secondoGenere + ": "+ str(film_secondoGenere) +" film\n")
+    txtbox_statistiche.insert(tk.END, terzoGenere + ": "+ str(film_terzoGenere) +" film\n")
+
+    # regista più seguito
+    primoRegista = max(registi.items(), key=operator.itemgetter(1))[0]
+    film_primoRegista = registi[primoRegista]
+    registi.pop(primoRegista)
+
+    secondoRegista = max(registi.items(), key=operator.itemgetter(1))[0]
+    film_secondoRegista = registi[secondoRegista]
+    registi.pop(secondoRegista)
+
+    terzoRegista = max(registi.items(), key=operator.itemgetter(1))[0]
+    film_terzoRegista = registi[terzoRegista]
+    registi.pop(terzoRegista)
+
+    txtbox_statistiche.insert(tk.END, "\n REGISTI PREFERITI \n")
+    txtbox_statistiche.insert(tk.END, primoRegista + ": "+ str(film_primoRegista) +" film\n")
+    txtbox_statistiche.insert(tk.END, secondoRegista + ": "+ str(film_secondoRegista) +" film\n")
+    txtbox_statistiche.insert(tk.END, terzoRegista + ": "+ str(film_terzoRegista) +" film\n")
+
+    # attori più seguiti
+    primoAttore = max(attori.items(), key=operator.itemgetter(1))[0]
+    film_primoAttore = attori[primoAttore]
+    attori.pop(primoAttore)
+
+    secondoAttore = max(attori.items(), key=operator.itemgetter(1))[0]
+    film_secondoAttore = attori[secondoAttore]
+    attori.pop(secondoAttore)
+
+    terzoAttore = max(attori.items(), key=operator.itemgetter(1))[0]
+    film_terzoAttore = attori[terzoAttore]
+    attori.pop(terzoAttore)
+
+    txtbox_statistiche.insert(tk.END, "\n ATTORI PREFERITI \n")
+    txtbox_statistiche.insert(tk.END, primoAttore + ": "+ str(film_primoAttore) +" film\n")
+    txtbox_statistiche.insert(tk.END, secondoAttore + ": "+ str(film_secondoAttore) +" film\n")
+    txtbox_statistiche.insert(tk.END, terzoAttore + ": "+ str(film_terzoAttore) +" film\n")
+
     # riblocco la scrivibilità del textbox
     txtbox_statistiche.configure(state='disabled')
 
@@ -378,7 +436,7 @@ global utente
 global apikey
 
 
-apikey = "Insert Valid API"
+apikey = "Insert valid API"
 
 # finestra base
 root = tk.Tk()
