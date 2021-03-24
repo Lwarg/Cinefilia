@@ -2,6 +2,8 @@ import tkinter as tk
 
 def cercaUtente(user):
 
+    global utente
+
     txtbox_output.configure(state='normal')
     txtbox_output.insert(tk.END, "ricerca utente in corso...")
     txtbox_output.delete("1.0","end")
@@ -12,9 +14,13 @@ def cercaUtente(user):
         if riga.strip() == user:
             flag = 1
             break
-    if flag == 1:
+    if utente == user:
+        txtbox_output.insert(tk.END,""+user)
+        seguiUtente.configure(state='disabled')
+    elif flag == 1 and utente!=user:
         txtbox_output.insert(tk.END,""+user)
         seguiUtente.configure(state='normal')
+        eliminaAmico.configure(state='normal')
     else:
         txtbox_output.insert(tk.END,"L'utente " + user + " non è registrato!")
     
@@ -31,9 +37,7 @@ def followUser(user):
     for riga in fileTesto:
         if riga.strip() == user:
             flag = 1
-            break
-    if user == utente:
-        flag = 2
+            break   
     if flag == 0:
         txtbox_output.configure(state='normal')
         txtbox_output.delete("1.0","end")
@@ -46,17 +50,22 @@ def followUser(user):
         txtbox_output.delete("1.0","end")
         txtbox_output.insert(tk.END,"Ops, sei già amico di " + user + "!")
         eliminaAmico.configure(state='normal')
-    elif flag == 2:
-        seguiUtente.configure(state='disabled')
 
-# def defollowUser(user):
-#     global utente
-#     with open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','r') as f:
-#         lines = f.readlines()
-#     with open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','w') as f:
-#     for line in lines:
-#         if line.strip("\n") != user:
-#             f.write(line)
+    txtbox_output.configure(state='disabled')
+
+def defollowUser(user):
+    global utente
+    with open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','r') as f:
+        lines = f.readlines()
+    with open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','w') as f:
+        for line in lines:
+            if line.strip("\n") != user:
+                f.write(line)
+    txtbox_output.configure(state='normal')
+    txtbox_output.delete("1.0","end")
+    txtbox_output.insert(tk.END,"Non sei più amico di " + user)
+    txtbox_output.configure(state='disabled')
+    eliminaAmico.configure(state='disabled')
 
 
 
