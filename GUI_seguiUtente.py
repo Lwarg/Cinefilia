@@ -1,14 +1,14 @@
 import tkinter as tk
 
 def cercaUtente(user):
-
+    global database
     global utente
 
     txtbox_output.configure(state='normal')
     txtbox_output.insert(tk.END, "ricerca utente in corso...")
     txtbox_output.delete("1.0","end")
 
-    fileTesto = open('C:/Users/simac/Google Drive/appCinefilia/users.txt','r')
+    fileTesto = open(database+'/users.txt','r')
     flag = 0
     for riga in fileTesto:
         if riga.strip() == user:
@@ -28,11 +28,11 @@ def cercaUtente(user):
 
 
 def followUser(user):
-    
+    global database
     global utente
     global seguiUtente
     
-    fileTesto = open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','r')
+    fileTesto = open(database+'/amicidi' + utente + '.txt','r')
     flag = 0
     for riga in fileTesto:
         if riga.strip() == user:
@@ -41,7 +41,7 @@ def followUser(user):
     if flag == 0:
         txtbox_output.configure(state='normal')
         txtbox_output.delete("1.0","end")
-        fileTesto = open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','a')
+        fileTesto = open(database + '/amicidi' + utente + '.txt','a')
         fileTesto.write("" + user + "\n")
         txtbox_output.insert(tk.END,"Alla grande! Ora " + user + " è un tuo amico!")
         eliminaAmico.configure(state='normal')
@@ -54,10 +54,11 @@ def followUser(user):
     txtbox_output.configure(state='disabled')
 
 def defollowUser(user):
+    global database
     global utente
-    with open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','r') as f:
+    with open(database + '/amicidi' + utente + '.txt','r') as f:
         lines = f.readlines()
-    with open('C:/Users/simac/Google Drive/appCinefilia/amicidi' + utente + '.txt','w') as f:
+    with open(database + '/amicidi' + utente + '.txt','w') as f:
         for line in lines:
             if line.strip("\n") != user:
                 f.write(line)
@@ -71,11 +72,12 @@ def defollowUser(user):
 
 
 ###################################################################################################
-
+global database
 global utente
 global apikey
 
-utente = "Simone"
+utente = "Insert user"
+database = 'Insert path'
 
 # finestra base
 tabAmici = tk.Tk()
