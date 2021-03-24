@@ -1,11 +1,12 @@
 import requests
+import operator
 import json
 
 # Prendo l'elenco dei film dell'utente specificato e ritorno un po' di statistiche
 
-utente = "Insert User"
-database = "Insert valid path"
-apikey = "Insert valid API"
+utente = "Insert user"
+database = "Insert path"
+apikey = "Insert valid APIkey"
 elencoFilm = open(database +'/elencoFilmdi' + utente +'.txt','r')
 
 schede_tecniche = []
@@ -58,16 +59,58 @@ for film in schede_tecniche:
     
 
 # durata
-durata = durata/60
+durata = int(durata/60*100)/100
 print("Tempo totale a guardare film:",durata,"ore")
 
 # genere più visto
-print(generi)
+primoGenere = max(generi.items(), key=operator.itemgetter(1))[0]
+film_primoGenere = generi[primoGenere]
+generi.pop(primoGenere)
+
+secondoGenere = max(generi.items(), key=operator.itemgetter(1))[0]
+film_secondoGenere = generi[secondoGenere]
+generi.pop(secondoGenere)
+
+terzoGenere = max(generi.items(), key=operator.itemgetter(1))[0]
+film_terzoGenere = generi[terzoGenere]
+generi.pop(terzoGenere)
+
+print(primoGenere,film_primoGenere)
+print(secondoGenere,film_secondoGenere)
+print(terzoGenere,film_terzoGenere)
 
 # regista più seguito
-print(registi)
+primoRegista = max(registi.items(), key=operator.itemgetter(1))[0]
+film_primoRegista = registi[primoRegista]
+registi.pop(primoRegista)
+
+secondoRegista = max(registi.items(), key=operator.itemgetter(1))[0]
+film_secondoRegista = registi[secondoRegista]
+registi.pop(secondoRegista)
+
+terzoRegista = max(registi.items(), key=operator.itemgetter(1))[0]
+film_terzoRegista = registi[terzoRegista]
+registi.pop(terzoRegista)
+
+print(primoRegista,film_primoRegista)
+print(secondoRegista,film_secondoRegista)
+print(terzoRegista,film_terzoRegista)
 
 # attori più seguiti
-print(attori)
+primoAttore = max(attori.items(), key=operator.itemgetter(1))[0]
+film_primoAttore = attori[primoAttore]
+attori.pop(primoAttore)
+
+secondoAttore = max(attori.items(), key=operator.itemgetter(1))[0]
+film_secondoAttore = attori[secondoAttore]
+attori.pop(secondoAttore)
+
+terzoAttore = max(attori.items(), key=operator.itemgetter(1))[0]
+film_terzoAttore = attori[terzoAttore]
+attori.pop(terzoAttore)
+
+print(primoAttore,film_primoAttore)
+print(secondoAttore,film_secondoAttore)
+print(terzoAttore,film_terzoAttore)
 
 
