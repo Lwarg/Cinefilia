@@ -123,12 +123,35 @@ def logout():
     txtbox_statistiche.insert(tk.END, testo)
     txtbox_statistiche.delete("1.0","end")
     txtbox_statistiche.configure(state='disabled')
+
+    txtbox_output.configure(state='normal')
+    txtbox_output.insert(tk.END, testo)
+    txtbox_output.delete("1.0","end")
+    txtbox_output.configure(state='disabled')
+
+    entry_newMovie.configure(state='normal')
+    entry_newMovie.insert(tk.END, '00')
+    entry_newMovie.delete(0, 'end')
+    entry_newMovie.configure(state='disabled')
+
+    entry_codice.configure(state='normal')
+    entry_codice.insert(tk.END, '00')
+    entry_codice.delete(0, 'end')
+    entry_codice.configure(state='disabled')
+
+    entry_ricercaUtente.configure(state='normal')
+    entry_ricercaUtente.insert(tk.END, '00')
+    entry_ricercaUtente.delete(0, 'end')
+    entry_ricercaUtente.configure(state='disabled')
     
     # Disabilito il bottone logout e quelli delle altre tab
     logoutbtn.configure(state='disabled')
     searchFilmbtn.configure(state='disabled')
     schedaTecnicabtn.configure(state='disabled')
     addFilmbtn.configure(state='disabled')
+    searchUserbtn.configure(state='disabled')
+    seguiUtentebtn.configure(state='disabled')
+    eliminaAmicobtn.configure(state='disabled')
     # abilito il login
     loginbtn.configure(state='normal')
     
