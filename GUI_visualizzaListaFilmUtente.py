@@ -22,7 +22,6 @@ def visualizzaListaFilm(user):
     # restituisco in output i film visti dall'ultimo al primo
     count = 1
     lista = []
-#    for film in reversed(list(elencoFilm.read())):
     for film in elencoFilm:
         idFilm = film.strip()
         lista.append(idFilm)
@@ -30,25 +29,16 @@ def visualizzaListaFilm(user):
     for film in lista:
         url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
         response = requests.request("GET", url)
-        # print(response)
         data = json.loads(response.text)
         testo = str(count)+" - "+ data['Title'] + "\n"
         txtbox_possibiliFilm.insert(tk.END, testo)
         url_immagine = ""+ data ['Poster'] + ""
         response = requests.get(url_immagine)
         img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data)))
-        # immagine_byt = urlopen(url_immagine).read()
-        # immagine_b64 = base64.encodebytes(immagine_byt)
-        # foto = tk.PhotoImage(data=immagine_b64)
-        # r = requests.get(data['Poster'])
-        # im = Image.open(io.BytesIO(r.content))
-        #img.save(im, format='JPEG')
-        # immagine = im.getbuffer()
-        txtbox_possibiliFilm.image_create(tk.END, image=img)
-        # cv = tk.Canvas(bg='white')
-        # cv.pack(side='top', fill='both', expand='yes')
-        # cv.create_image(10, 10, image=foto, anchor='nw')
+        img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
+        immagine = tk.Label(image=img)
+        immagine.image = img
+        immagine.place(x=500, y=count*100)
         count +=1
 
     # riblocco la scrivibilità del textbox
