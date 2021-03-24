@@ -52,7 +52,7 @@ global username
 global apikey
 
 username = "luca"
-apikey = "8ca5768b&"
+apikey = "Insert valid API"
 
 # finestra
 root = tk.Tk()
