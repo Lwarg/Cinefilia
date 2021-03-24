@@ -1,7 +1,10 @@
 import tkinter as tk
 import requests
 import json
+import io
 from tkinter import ttk
+from PIL import Image,ImageTk
+
 
 ###################################################################################################################
 ###################################################################################################################
@@ -52,12 +55,16 @@ def login(user, DBpath):
                 txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
                 utente = user
 
+                # carico i dati dell'utente
+                visualizzaListaFilm()
+                visualizzaStatistiche()
+
                 # attivo tutti i bottoni e i campi di inserimento
                 entry_newMovie.configure(state='normal')
                 entry_newMovie.configure(state='normal')
                 searchFilmbtn.configure(state='normal')
-
-
+                logoutbtn.configure(state='normal')
+                loginbtn.configure(state='disabled')
                 break
         if not userEsistente:
             txtbox_outputlogin.insert(tk.END,"Utente non esistente, registrati")
@@ -68,10 +75,58 @@ def login(user, DBpath):
             entry_codice.configure(state='disabled')
             addFilmbtn.configure(state='disabled')
             schedaTecnicabtn.configure(state='disabled')
+
     except:
         txtbox_outputlogin.insert(tk.END,"Database not found")
     finally:
         txtbox_outputlogin.configure(state='disabled')
+
+
+###################################################################################################################
+
+### funzione corrispondente al bottone logoutbtn (per loggare un utente)
+def logout():
+    global utente
+    global database
+
+    testo = "Uscita in corso..."
+
+    # ripulitura campi di testo
+    txtbox_outputlogin.configure(state='normal')
+    txtbox_outputlogin.insert(tk.END, testo)
+    txtbox_outputlogin.delete("1.0","end")
+    txtbox_outputlogin.configure(state='disabled')
+
+    txtbox_possibiliFilm.configure(state='normal')
+    txtbox_possibiliFilm.insert(tk.END, testo)
+    txtbox_possibiliFilm.delete("1.0","end")
+    txtbox_possibiliFilm.configure(state='disabled')
+
+    txtbox_schedaTec.configure(state='normal')
+    txtbox_schedaTec.insert(tk.END, testo)
+    txtbox_schedaTec.delete("1.0","end")
+    txtbox_schedaTec.configure(state='disabled')
+
+    txtbox_mieiFilm.configure(state='normal')
+    txtbox_mieiFilm.insert(tk.END, testo)
+    txtbox_mieiFilm.delete("1.0","end")
+    txtbox_mieiFilm.configure(state='disabled')
+
+    txtbox_statistiche.configure(state='normal')
+    txtbox_statistiche.insert(tk.END, testo)
+    txtbox_statistiche.delete("1.0","end")
+    txtbox_statistiche.configure(state='disabled')
+    
+    # Disabilito il bottone logout e quelli delle altre tab
+    logoutbtn.configure(state='disabled')
+    searchFilmbtn.configure(state='disabled')
+    schedaTecnicabtn.configure(state='disabled')
+    addFilmbtn.configure(state='disabled')
+    # abilito il login
+    loginbtn.configure(state='normal')
+    
+    
+
 
 ###################################################################################################################
 
@@ -157,15 +212,10 @@ def aggiungiFilm(codice):
         fileTestoScrittura.write("" + film_scelto + "\n")
         txtbox_schedaTec.insert(tk.END, data['Search'][int(codice)-1]['Title']+" aggiunto ai Miei Film")
         fileTestoScrittura.close()
+        visualizzaListaFilm()
+        visualizzaStatistiche()
     else: 
         txtbox_schedaTec.insert(tk.END,data['Search'][int(codice)-1]['Title']+" è già presente in elenco")
-
-
-
-
-
-    
-    
 
     # riblocco la scrivibilità del textbox
     txtbox_schedaTec.configure(state='disabled')
@@ -210,18 +260,125 @@ def mostraSchedaTecnica(codice):
 
 
 ###################################################################################################################
+
+### funzione corrispondente alla tab Miei Film (per visualizzare l'elenco dei miei film )
+
+def visualizzaListaFilm():
+    global txtbox_mieiFilm
+    global database
+    global utente
+    global apikey
+
+    # rendo scrivibile il textbox
+    txtbox_mieiFilm.configure(state='normal')
+    txtbox_mieiFilm.insert(tk.END, "cercando film...")
+    txtbox_mieiFilm.delete("1.0","end")
+
+    elencoFilm = open(database +'/elencoFilmdi'+ utente +'.txt','r')
+
+    # restituisco in output i film visti dall'ultimo al primo
+    count = 1
+    lista = []
+    for film in elencoFilm:
+        idFilm = film.strip()
+        lista.append(idFilm)
+    lista.reverse()
+    for film in lista:
+        url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
+        response = requests.request("GET", url)
+        data = json.loads(response.text)
+        testo = str(count)+" - "+ data['Title'] + "\n"
+        txtbox_mieiFilm.insert(tk.END, testo)
+        #url_immagine = ""+ data ['Poster'] + ""
+        #response = requests.get(url_immagine)
+        #img_data = response.content
+        #img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
+        #immagine = tk.Label(image=img)
+        #immagine.image = img
+        #immagine.place(x=500, y=count*100)
+        count +=1
+
+    # riblocco la scrivibilità del textbox
+    txtbox_possibiliFilm.configure(state='disabled')
+
+
+###################################################################################################################
+
+### funzione corrispondente alla tab statistiche 
+
+def visualizzaStatistiche():
+    global txtbox_statistiche
+    global database
+    global utente
+    global apikey
+
+    # rendo scrivibile il textbox
+    txtbox_statistiche.configure(state='normal')
+    txtbox_statistiche.insert(tk.END, "caricamento...")
+    txtbox_statistiche.delete("1.0","end")
+
+    elencoFilm = open(database +'/elencoFilmdi'+ utente +'.txt','r')
+
+    schede_tecniche = []
+    for film in elencoFilm:
+        idFilm = film.strip()
+        # ricerca film tramite API usando l'ID del film
+        url = "http://www.omdbapi.com/?i="+idFilm+"&apikey="+apikey
+        response = requests.request("GET", url)
+        schede_tecniche.append(json.loads(response.text))
+
+    # numero film visti
+    numero_film_visti = len(schede_tecniche)
+    txtbox_statistiche.insert(tk.END,"Numero di film visti: "+str(numero_film_visti)+"\n")
+    durata = 0
+    generi = dict()
+    registi = dict()
+    attori = dict()
+    for film in schede_tecniche:
+        # somma durata totale 
+        durata = durata + int(film['Runtime'].split(" ")[0])
+        # conteggio generi
+        tipologie = film['Genre'].split(", ")
+        for genere in tipologie:
+            if genere in generi:
+                generi[genere] += 1
+            else:
+                generi[genere] = 1
+        # conteggio registi
+        if film['Director'] in registi:
+            registi[film['Director']] += 1
+        else:
+            registi[film['Director']] = 1
+        # conteggio attori
+        cast = film['Actors'].split(", ")
+        for actor in cast:
+            if actor in attori:
+                attori[actor] += 1
+            else:
+                attori[actor] = 1
+
+
+    # durata
+    durata = int(durata/60*100)/100
+    txtbox_statistiche.insert(tk.END,"Tempo totale a guardare film: "+str(durata)+" ore\n")
+
+    # riblocco la scrivibilità del textbox
+    txtbox_statistiche.configure(state='disabled')
+
+###################################################################################################################
 ###################################################################################################################
 ###################################################################################################################
 
 # REALIZZAZIONE DELLA GUI
 global txtbox_possibiliFilm
 global txtbox_schedaTec
+global txtbox_mieiFilm
 global database
 global utente
 global apikey
 
 
-apikey = "Insert a valid API"
+apikey = "Insert Valid API"
 
 # finestra base
 root = tk.Tk()
@@ -232,11 +389,13 @@ tabAccedi = ttk.Frame(tabControl)
 tabCerca = ttk.Frame(tabControl)
 tabMyMovies = ttk.Frame(tabControl)
 tabStatistiche = ttk.Frame(tabControl)
+tabAmici = ttk.Frame(tabControl)
 
 tabControl.add(tabAccedi, text ='Accedi')
 tabControl.add(tabCerca, text ='Cerca')
 tabControl.add(tabMyMovies, text ='Miei Film')
 tabControl.add(tabStatistiche, text ='Statistiche')
+tabControl.add(tabAmici, text = 'Amici')
 tabControl.pack(expand = 1, fill ="both")
 
 ###################################################################################################################
@@ -312,10 +471,14 @@ txtbox_outputlogin = tk.Text(tabLogin, height=5, width=100)
 txtbox_outputlogin.configure(state='disabled')
 txtbox_outputlogin.grid(column=0, row=4)
 
-# bottone per effettuare la registrazione
+# bottone per effettuare il login
 loginbtn = tk.Button(tabLogin, text="Login", command=lambda: login(entry_User.get(), entry_DB.get()), width=20)
 loginbtn.grid(column=0, row=3)
 
+# bottone per effettuare il logout
+logoutbtn = tk.Button(tabLogin, text="Logout", command=lambda: logout(), width=20)
+logoutbtn.grid(column=0, row=5)
+logoutbtn.configure(state='disabled')
 
 ###################################################################################################################
 
@@ -324,7 +487,7 @@ loginbtn.grid(column=0, row=3)
 # campo di inserimento titolo del film
 canvas_newMovie = tk.Canvas(tabCerca, width = 400, height = 20)
 canvas_newMovie.grid(column=0, row=0)
-entry_newMovie = tk.Entry (tabCerca) 
+entry_newMovie = tk.Entry(tabCerca) 
 canvas_newMovie.create_window(200, 10, window=entry_newMovie, width=200)
 entry_newMovie.configure(state='disabled')
 
@@ -369,6 +532,27 @@ schedaTecnicabtn = tk.Button(tabCerca, text="Scheda tecnica", command=lambda: mo
 schedaTecnicabtn.grid(column=0, row=3)
 canvas_codice.create_window(400, 10, window=schedaTecnicabtn)
 schedaTecnicabtn.configure(state='disabled')
+
+
+###################################################################################################################
+
+### TAB MIEI FILM
+
+# textbox con tutti i film visti dall'utente (si parte dall'ultimo e si va a ritroso)
+txtbox_mieiFilm = tk.Text(tabMyMovies, height=100, width=100)
+txtbox_mieiFilm.configure(state='disabled')
+txtbox_mieiFilm.grid(column=0, row=2)
+
+
+###################################################################################################################
+
+### TAB STATISTICHE
+
+# textbox con le statistiche dei film visti dall'utente (si parte dall'ultimo e si va a ritroso)
+txtbox_statistiche = tk.Text(tabStatistiche, height=100, width=100)
+txtbox_statistiche.configure(state='disabled')
+txtbox_statistiche.grid(column=0, row=2)
+
 
 
 ###################################################################################################################
