@@ -46,41 +46,47 @@ def login(user, DBpath):
     txtbox_outputlogin.insert(tk.END, "accesso in corso...")
     txtbox_outputlogin.delete("1.0","end")
 
-    try:
-        database = DBpath
-        # l'username viene appeso nel file users.txt che si trova nella cartella sincronizzata con google drive
-        userEsistente = False
-        utenti = open(''+ DBpath +'/users.txt','r')
-        for riga in utenti:
-            if riga.strip() == user:
-                userEsistente = True
-                utente = user
-                # carico i dati dell'utente
-                visualizzaListaFilm()
-                visualizzaStatistiche()
-                # attivo tutti i bottoni e i campi di inserimento
-                entry_newMovie.configure(state='normal')
-                entry_newMovie.configure(state='normal')
-                searchFilmbtn.configure(state='normal')
-                logoutbtn.configure(state='normal')
-                loginbtn.configure(state='disabled')
-                # messaggio di output all'utente
-                txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
-                break
-            
-        if not userEsistente:
-            txtbox_outputlogin.insert(tk.END,"Utente non esistente, registrati")
-            entry_newMovie.configure(state='disabled')
-            entry_newMovie.configure(state='disabled')
-            searchFilmbtn.configure(state='disabled')
-            txtbox_schedaTec.configure(state='disabled')
-            entry_codice.configure(state='disabled')
-            addFilmbtn.configure(state='disabled')
-            schedaTecnicabtn.configure(state='disabled')
-    except:
-        txtbox_outputlogin.insert(tk.END,"Errore di accesso")
-    finally:
-        txtbox_outputlogin.configure(state='disabled')
+    #try:
+    database = DBpath
+    # l'username viene appeso nel file users.txt che si trova nella cartella sincronizzata con google drive
+    userEsistente = False
+    utenti = open(''+ DBpath +'/users.txt','r')
+    for riga in utenti:
+        if riga.strip() == user:
+            userEsistente = True
+            utente = user
+            # carico i dati dell'utente
+            visualizzaListaFilm()
+            visualizzaStatistiche()
+            # attivo tutti i bottoni e i campi di inserimento
+            entry_newMovie.configure(state='normal')
+            entry_newMovie.configure(state='normal')
+            searchFilmbtn.configure(state='normal')
+            logoutbtn.configure(state='normal')
+            entry_ricercaUtente.configure(state='normal')
+            searchUserbtn.configure(state='normal')
+            loginbtn.configure(state='disabled')
+            # messaggio di output all'utente
+            txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
+            break
+        
+    if not userEsistente:
+        txtbox_outputlogin.insert(tk.END,"Utente non esistente, registrati")
+        entry_newMovie.configure(state='disabled')
+        entry_newMovie.configure(state='disabled')
+        searchFilmbtn.configure(state='disabled')
+        txtbox_schedaTec.configure(state='disabled')
+        entry_codice.configure(state='disabled')
+        addFilmbtn.configure(state='disabled')
+        schedaTecnicabtn.configure(state='disabled')
+        entry_ricercaUtente.configure(state='disabled')
+        searchUserbtn.configure(state='disabled')
+        seguiUtentebtn.configure(state='disabled')
+        eliminaAmicobtn.configure(state='disabled')
+    #except:
+    #    txtbox_outputlogin.insert(tk.END,"Errore di accesso")
+    #finally:
+    #    txtbox_outputlogin.configure(state='disabled')
 
 
 ###################################################################################################################
@@ -290,9 +296,8 @@ def visualizzaListaFilm():
             url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
             response = requests.request("GET", url)
             data = json.loads(response.text)
-            testo = str(count)+" - "+ data['Title'] + "\n"
-            txtbox_mieiFilm.insert(tk.END, testo)
-            print(data['Poster'])
+            #testo = str(count)+" - "+ data['Title'].upper() + "\n"
+            #txtbox_mieiFilm.insert(tk.END, testo)
             url_immagine = ""+ data ['Poster'] + ""
             response = requests.get(url_immagine)
             img_data = response.content
@@ -300,10 +305,14 @@ def visualizzaListaFilm():
             immagine = tk.Label(image=img)
             immagine.image = img
             txtbox_mieiFilm.image_create(tk.END, image=img)
-            txtbox_mieiFilm.insert(tk.END, "\n")
+            txtbox_mieiFilm.insert(tk.END, "    ")
             #immagine.place(x=500, y=count*100)
         except:
-            txtbox_mieiFilm.insert(tk.END, "\n") 
+            url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
+            response = requests.request("GET", url)
+            data = json.loads(response.text)
+            testo = str(count)+" - "+ data['Title'].upper() + "\n"
+            txtbox_mieiFilm.insert(tk.END, testo)
 
         count +=1
 
@@ -345,26 +354,32 @@ def visualizzaStatistiche():
     attori = dict()
     for film in schede_tecniche:
         # somma durata totale 
-        durata = durata + int(film['Runtime'].split(" ")[0])
+        if film['Runtime'].split(" ")[0] == 'N/A':
+            durata += 90 # se non ho i dati aggiungo una durata stimata di 90 minuti 
+        else:
+            durata = durata + int(film['Runtime'].split(" ")[0])
         # conteggio generi
         tipologie = film['Genre'].split(", ")
         for genere in tipologie:
-            if genere in generi:
-                generi[genere] += 1
-            else:
-                generi[genere] = 1
+            if genere != 'N/A':
+                if genere in generi:
+                    generi[genere] += 1
+                else:
+                    generi[genere] = 1
         # conteggio registi
-        if film['Director'] in registi:
-            registi[film['Director']] += 1
-        else:
-            registi[film['Director']] = 1
+        if film['Director'] != 'N/A':
+            if film['Director'] in registi:
+                registi[film['Director']] += 1
+            else:
+                registi[film['Director']] = 1
         # conteggio attori
         cast = film['Actors'].split(", ")
         for actor in cast:
-            if actor in attori:
-                attori[actor] += 1
-            else:
-                attori[actor] = 1
+            if actor != 'N/A':
+                if actor in attori:
+                    attori[actor] += 1
+                else:
+                    attori[actor] = 1
 
 
     # durata
@@ -430,6 +445,87 @@ def visualizzaStatistiche():
 
     # riblocco la scrivibilità del textbox
     txtbox_statistiche.configure(state='disabled')
+
+
+###################################################################################################################
+
+### funzione corrispondente searchUserbtn (ricerca un utente da seguire o meno) 
+
+def cercaUtente(user):
+    global database
+    global utente
+
+    txtbox_output.configure(state='normal')
+    txtbox_output.insert(tk.END, "ricerca utente in corso...")
+    txtbox_output.delete("1.0","end")
+
+    fileTesto = open(database+'/users.txt','r')
+    flag = 0
+    for riga in fileTesto:
+        if riga.strip() == user:
+            flag = 1
+            break
+    if utente == user:
+        txtbox_output.insert(tk.END,""+user)
+        seguiUtentebtn.configure(state='disabled')
+    elif flag == 1 and utente!=user:
+        txtbox_output.insert(tk.END,""+user)
+        seguiUtentebtn.configure(state='normal')
+        eliminaAmicobtn.configure(state='normal')
+    else:
+        txtbox_output.insert(tk.END,"L'utente " + user + " non è registrato!")
+    
+    txtbox_output.configure(state='disabled')
+
+###################################################################################################################
+
+### funzione corrispondente seguiUtentebtn (segui un nuovo utente) 
+
+def followUser(user):
+    global database
+    global utente
+    global seguiUtente
+    
+    fileTesto = open(database+'/amicidi' + utente + '.txt','r')
+    flag = 0
+    for riga in fileTesto:
+        if riga.strip() == user:
+            flag = 1
+            break   
+    if flag == 0:
+        txtbox_output.configure(state='normal')
+        txtbox_output.delete("1.0","end")
+        fileTesto = open(database + '/amicidi' + utente + '.txt','a')
+        fileTesto.write("" + user + "\n")
+        txtbox_output.insert(tk.END,"Alla grande! Ora " + user + " è un tuo amico!")
+        eliminaAmicobtn.configure(state='normal')
+    elif flag == 1:
+        txtbox_output.configure(state='normal')
+        txtbox_output.delete("1.0","end")
+        txtbox_output.insert(tk.END,"Ops, sei già amico di " + user + "!")
+        eliminaAmicobtn.configure(state='normal')
+
+    txtbox_output.configure(state='disabled')
+
+
+###################################################################################################################
+
+### funzione corrispondente eliminaAmicobtn (non seguire più un utente) 
+
+def defollowUser(user):
+    global database
+    global utente
+    with open(database + '/amicidi' + utente + '.txt','r') as f:
+        lines = f.readlines()
+    with open(database + '/amicidi' + utente + '.txt','w') as f:
+        for line in lines:
+            if line.strip("\n") != user:
+                f.write(line)
+    txtbox_output.configure(state='normal')
+    txtbox_output.delete("1.0","end")
+    txtbox_output.insert(tk.END,"Non sei più amico di " + user)
+    txtbox_output.configure(state='disabled')
+    eliminaAmicobtn.configure(state='disabled')
 
 ###################################################################################################################
 ###################################################################################################################
@@ -603,23 +699,67 @@ schedaTecnicabtn.configure(state='disabled')
 
 ###################################################################################################################
 
-### TAB MIEI FILM
+### TAB MIEI FILM ###
 
 # textbox con tutti i film visti dall'utente (si parte dall'ultimo e si va a ritroso)
-txtbox_mieiFilm = tk.Text(tabMyMovies, height=100, width=100)
+txtbox_mieiFilm = tk.Text(tabMyMovies, height=50, width=100)
 txtbox_mieiFilm.configure(state='disabled')
 txtbox_mieiFilm.grid(column=0, row=2)
 
 
 ###################################################################################################################
 
-### TAB STATISTICHE
+### TAB STATISTICHE ###
 
 # textbox con le statistiche dei film visti dall'utente (si parte dall'ultimo e si va a ritroso)
 txtbox_statistiche = tk.Text(tabStatistiche, height=100, width=100)
 txtbox_statistiche.configure(state='disabled')
 txtbox_statistiche.grid(column=0, row=2)
 
+###################################################################################################################
+
+### TAB AMICI ###
+
+# tabs di secondo livello
+tabAmiciControl = ttk.Notebook(tabAmici)
+tabMieiAmici = ttk.Frame(tabAmiciControl)
+tabCercaAmici = ttk.Frame(tabAmiciControl)
+
+
+tabAmiciControl.add(tabMieiAmici, text ='Miei Amici')
+tabAmiciControl.add(tabCercaAmici, text ='Cerca Amici')
+tabAmiciControl.pack(expand = 1, fill ="both")
+
+# campo di inserimento ricerca utente
+canvas_ricercaUtente = tk.Canvas(tabCercaAmici, width = 400, height = 20)
+canvas_ricercaUtente.grid(column=0, row=0) 
+entry_ricercaUtente = tk.Entry (tabCercaAmici)
+canvas_ricercaUtente.create_window(200, 10, window=entry_ricercaUtente, width=200)
+entry_ricercaUtente.configure(state='disabled')
+
+## label ricerca utente
+label_ricercaUtente = tk.Label(text= "Cerca utente")
+canvas_ricercaUtente.create_window(50, 10, window=label_ricercaUtente)
+
+# bottone per effettuare la ricerca di un utente
+searchUserbtn = tk.Button(tabCercaAmici, text="Cerca", command=lambda: cercaUtente(entry_ricercaUtente.get()), width=20)
+searchUserbtn.grid(column=0, row=1)
+searchUserbtn.configure(state='disabled')
+
+# textbox per l'utente cercato
+txtbox_output = tk.Text(tabCercaAmici, height=2, width=100)
+txtbox_output.configure(state='disabled')
+txtbox_output.grid(column=0, row=2)
+
+# bottone per "seguire" l'utente cercato
+seguiUtentebtn = tk.Button(tabCercaAmici, text="Segui!", command=lambda: followUser(entry_ricercaUtente.get()), width=20)
+seguiUtentebtn.grid(column=0, row=3)
+seguiUtentebtn.configure(state='disabled')
+
+# bottone per "defolloware" l'utente cercato
+eliminaAmicobtn = tk.Button(tabCercaAmici, text="Non seguire più", command=lambda: defollowUser(entry_ricercaUtente.get()), width=20)
+eliminaAmicobtn.grid(column=0, row=4)
+eliminaAmicobtn.configure(state='disabled')
 
 
 ###################################################################################################################
