@@ -269,6 +269,7 @@ def visualizzaListaFilm():
     global database
     global utente
     global apikey
+    global img
 
     # rendo scrivibile il textbox
     txtbox_mieiFilm.configure(state='normal')
@@ -296,7 +297,9 @@ def visualizzaListaFilm():
         img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
         immagine = tk.Label(image=img)
         immagine.image = img
-        immagine.place(x=500, y=count*100)
+        txtbox_mieiFilm.image_create(tk.END, image=img)
+        txtbox_mieiFilm.insert(tk.END, "\n")
+        #immagine.place(x=500, y=count*100)
         count +=1
 
     # riblocco la scrivibilità del textbox
@@ -433,7 +436,7 @@ global utente
 global apikey
 
 
-apikey = "Insert Valid APIkey"
+apikey = "Insert valid API"
 
 # finestra base
 root = tk.Tk()
