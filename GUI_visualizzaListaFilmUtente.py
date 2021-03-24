@@ -17,7 +17,7 @@ def visualizzaListaFilm(user):
     elencoFilm = open('C:/Users/simac/Google Drive/appCinefilia/elencoFilmdi'+ user +'.txt','r')
     
     # richiesta titolo film tramite API
-    apikey = "8ca5768b&" # 1000 requests al giorno
+    apikey = "Insert valid API" # 1000 requests al giorno
     
     # restituisco in output i film visti dall'ultimo al primo
     count = 1
@@ -52,7 +52,7 @@ global username
 global apikey
 
 username = "luca"
-apikey = "8ca5768b&"
+apikey = "Insert valid API"
 
 # finestra
 root = tk.Tk()
