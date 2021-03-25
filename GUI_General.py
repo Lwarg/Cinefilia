@@ -731,7 +731,7 @@ global utente
 global apikey
 
 
-apikey = "Insert valid API"
+apikey = "8ca5768b&"
 
 # finestra base
 root = tk.Tk()
