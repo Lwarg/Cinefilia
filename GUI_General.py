@@ -69,6 +69,7 @@ def login(user, DBpath):
             entry_nuovoCommento.configure(state='normal')
             pubblicabtn.configure(state='normal')
             aggiornabtn.configure(state='normal')
+            visualizzaAmici.configure(state='normal')
             loginbtn.configure(state='disabled')
             # messaggio di output all'utente
             txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
@@ -90,6 +91,7 @@ def login(user, DBpath):
         entry_nuovoCommento.configure(state='disabled')
         pubblicabtn.configure(state='disabled')
         aggiornabtn.configure(state='disabled')
+        visualizzaAmici.configure(state='disabled')
     #except:
     #    txtbox_outputlogin.insert(tk.END,"Errore di accesso")
     #finally:
@@ -192,6 +194,7 @@ def logout():
     visualizzaFilmAmico.configure(state='disabled')
     pubblicabtn.configure(state='disabled')
     aggiornabtn.configure(state='disabled')
+    visualizzaAmici.configure(state='disabled')
 
     # abilito il login
     loginbtn.configure(state='normal')
@@ -945,16 +948,16 @@ canvas_wip.create_window(400, 30, window=label_wip)
 # textbox per visualizzare numero amici 
 txtbox_numeroAmici = tk.Text(tabMieiAmici, height=2, width=100)
 txtbox_numeroAmici.configure(state='disabled')
-txtbox_numeroAmici.grid(column=0, row=0)
+txtbox_numeroAmici.grid(column=0, row=1)
 
 # textbox per tutti gli amici 
 txtbox_mieiAmici = tk.Text(tabMieiAmici, height=10, width=100)
 txtbox_mieiAmici.configure(state='disabled')
-txtbox_mieiAmici.grid(column=0, row=3)
+txtbox_mieiAmici.grid(column=0, row=4)
 
 # campo inserimento codice
 canvas_codice = tk.Canvas(tabMieiAmici, width = 400, height = 20)
-canvas_codice.grid(column=0, row=4)
+canvas_codice.grid(column=0, row=5)
 entry_codice_amico = tk.Entry(tabMieiAmici) 
 canvas_codice.create_window(70, 10, window=entry_codice_amico, width=50)
 entry_codice_amico.configure(state='disabled')
@@ -962,6 +965,11 @@ entry_codice_amico.configure(state='disabled')
 ## label inserimento codice
 label_codiceamico= tk.Label(tabMieiAmici, text= "Codice")
 canvas_codice.create_window(0, 10, window=label_codiceamico)
+
+# bottone per aggiornare il campo amici di un utente
+visualizzaAmici = tk.Button(tabMieiAmici, text="Aggiorna", command=lambda: visualizzaListaAmici(), width=20)
+visualizzaAmici.grid(column=0, row=0)
+visualizzaAmici.configure(state='disabled')
 
 # bottone per visualizzare i film dell'amico seguito
 visualizzaFilmAmico = tk.Button(tabMieiAmici, text="Vedi i film del tuo amico", command=lambda: visualizzaFilm(entry_codice_amico.get()), width=20)
@@ -972,7 +980,7 @@ visualizzaFilmAmico.configure(state='disabled')
 # textbox per visualizzare i film degli amici 
 txtbox_filmAmici = tk.Text(tabMieiAmici, height=100, width=100)
 txtbox_filmAmici.configure(state='disabled')
-txtbox_filmAmici.grid(column=0, row=5)
+txtbox_filmAmici.grid(column=0, row=6)
 
 # campo di inserimento ricerca utente
 canvas_ricercaUtente = tk.Canvas(tabCercaAmici, width = 400, height = 20)
