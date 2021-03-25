@@ -189,6 +189,7 @@ def logout():
     searchUserbtn.configure(state='disabled')
     seguiUtentebtn.configure(state='disabled')
     eliminaAmicobtn.configure(state='disabled')
+    visualizzaFilmAmico.configure(state='disabled')
     pubblicabtn.configure(state='disabled')
     aggiornabtn.configure(state='disabled')
 
@@ -614,11 +615,24 @@ def visualizzaListaAmici():
         count += 1
     txtbox_mieiAmici.configure(state='disabled')
 
+    # segna quanti ne segui
     txtbox_numeroAmici.configure(state='normal')
     txtbox_numeroAmici.insert(tk.END, "aggiorno...")
     txtbox_numeroAmici.delete("1.0","end")
     txtbox_numeroAmici.insert(tk.END, "Segui: "+str(count-1))
-    txtbox_numeroAmici.configure(state='normal')
+    
+
+    #segna quanti ti seguono
+    numeroAmici = 0
+    fileUtenti = open(''+database+'/users.txt','r')
+    for user in fileUtenti:
+        if utente != user.strip():
+            fileUtenti2 = open(''+database+'/amicidi'+user.strip()+'.txt','r')
+            for amici in fileUtenti2:
+                if amici.strip() == utente:
+                    numeroAmici += 1
+    txtbox_numeroAmici.insert(tk.END, "\nFollowers: "+str(numeroAmici))
+    txtbox_numeroAmici.configure(state='disabled')
 
     visualizzaFilmAmico.configure(state='normal')
     entry_codice_amico.configure(state='normal')
