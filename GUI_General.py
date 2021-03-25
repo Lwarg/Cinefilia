@@ -58,6 +58,7 @@ def login(user, DBpath):
             # carico i dati dell'utente
             visualizzaListaFilm()
             visualizzaStatistiche()
+            visualizzaListaAmici()
             # attivo tutti i bottoni e i campi di inserimento
             entry_newMovie.configure(state='normal')
             entry_newMovie.configure(state='normal')
@@ -130,6 +131,21 @@ def logout():
     txtbox_statistiche.delete("1.0","end")
     txtbox_statistiche.configure(state='disabled')
 
+    txtbox_numeroAmici.configure(state='normal')
+    txtbox_numeroAmici.insert(tk.END, testo)
+    txtbox_numeroAmici.delete("1.0","end")
+    txtbox_numeroAmici.configure(state='disabled')
+
+    txtbox_mieiAmici.configure(state='normal')
+    txtbox_mieiAmici.insert(tk.END, testo)
+    txtbox_mieiAmici.delete("1.0","end")
+    txtbox_mieiAmici.configure(state='disabled')
+
+    txtbox_filmAmici.configure(state='normal')
+    txtbox_filmAmici.insert(tk.END, testo)
+    txtbox_filmAmici.delete("1.0","end")
+    txtbox_filmAmici.configure(state='disabled')
+
     txtbox_output.configure(state='normal')
     txtbox_output.insert(tk.END, testo)
     txtbox_output.delete("1.0","end")
@@ -149,6 +165,11 @@ def logout():
     entry_codice.insert(tk.END, '00')
     entry_codice.delete(0, 'end')
     entry_codice.configure(state='disabled')
+
+    entry_codice_amico.configure(state='normal')
+    entry_codice_amico.insert(tk.END, '00')
+    entry_codice_amico.delete(0, 'end')
+    entry_codice_amico.configure(state='disabled')
 
     entry_ricercaUtente.configure(state='normal')
     entry_ricercaUtente.insert(tk.END, '00')
@@ -546,7 +567,8 @@ def followUser(user):
         txtbox_output.delete("1.0","end")
         txtbox_output.insert(tk.END,"Ops, sei già amico di " + user + "!")
         eliminaAmicobtn.configure(state='normal')
-
+    
+    visualizzaListaAmici()
     txtbox_output.configure(state='disabled')
 
 
@@ -569,6 +591,74 @@ def defollowUser(user):
     txtbox_output.configure(state='disabled')
     eliminaAmicobtn.configure(state='disabled')
 
+
+###################################################################################################################
+
+### funzione corrispondente alla lista amici 
+
+def visualizzaListaAmici():
+    global database
+    global utente
+    global txtbox_mieiAmici
+    global txtbox_numeroAmici
+
+    txtbox_mieiAmici.configure(state='normal')
+    txtbox_mieiAmici.insert(tk.END, "ricerca in corso...")
+    txtbox_mieiAmici.delete("1.0","end")
+
+    fileTesto = open(''+ database +'/amicidi'+ utente + '.txt','r')
+    count = 1
+    for riga in fileTesto:
+        testo = str(count)+" - "+ riga.strip() + "\n"
+        txtbox_mieiAmici.insert(tk.END, testo)
+        count += 1
+    txtbox_mieiAmici.configure(state='disabled')
+
+    txtbox_numeroAmici.configure(state='normal')
+    txtbox_numeroAmici.insert(tk.END, "aggiorno...")
+    txtbox_numeroAmici.delete("1.0","end")
+    txtbox_numeroAmici.insert(tk.END, "Segui: "+str(count-1))
+    txtbox_numeroAmici.configure(state='normal')
+
+    visualizzaFilmAmico.configure(state='normal')
+    entry_codice_amico.configure(state='normal')
+
+###################################################################################################################
+
+### funzione per visualizzare i film di un tuo amico 
+
+def visualizzaFilm(codice):
+
+    global database
+    global utente
+    global apikey
+
+    txtbox_filmAmici.configure(state='normal')
+    txtbox_filmAmici.insert(tk.END, "ricerca in corso...")
+    txtbox_filmAmici.delete("1.0","end")
+
+    fileTesto = open(''+ database +'/amicidi'+ utente + '.txt','r')
+    counter = 1
+    for riga in fileTesto:
+        if counter <= int(codice):
+            amico = riga.strip()
+            counter += 1
+    listaFilm = open(''+ database +'/elencoFilmdi'+ amico + '.txt','r')
+    contatore = 1
+    lista = []
+    for film in listaFilm:
+        idFilm = film.strip()
+        lista.append(idFilm)
+    lista.reverse()
+    for film in lista:
+        url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
+        response = requests.request("GET", url)
+        data = json.loads(response.text)
+        testo = str(contatore)+" - "+ data['Title'] + "\n"
+        txtbox_filmAmici.insert(tk.END, testo)
+        contatore += 1
+    
+    txtbox_filmAmici.configure(state='disable')
 
 ###################################################################################################################
 
@@ -620,6 +710,8 @@ def aggiorna():
 global txtbox_possibiliFilm
 global txtbox_schedaTec
 global txtbox_mieiFilm
+global txtbox_mieiAmici
+global txtbox_numeroAmici
 global database
 global utente
 global apikey
@@ -638,6 +730,7 @@ tabMyMovies = ttk.Frame(tabControl)
 tabStatistiche = ttk.Frame(tabControl)
 tabAmici = ttk.Frame(tabControl)
 tabHome = ttk.Frame(tabControl)
+tabSuggeriti = ttk.Frame(tabControl)
 
 tabControl.add(tabAccedi, text ='Accedi')
 tabControl.add(tabCerca, text ='Cerca')
@@ -645,7 +738,17 @@ tabControl.add(tabMyMovies, text ='Miei Film')
 tabControl.add(tabStatistiche, text ='Statistiche')
 tabControl.add(tabAmici, text = 'Amici')
 tabControl.add(tabHome, text = 'Home')
+tabControl.add(tabSuggeriti, text = 'Film Suggeriti')
 tabControl.pack(expand = 1, fill ="both")
+
+
+
+## label work in progress
+canvas_wip2 = tk.Canvas(tabSuggeriti, width = 400, height = 20)
+canvas_wip2.grid(column=0, row=4)
+label_wip2= tk.Label(tabSuggeriti, text= "work in progress")
+canvas_wip2.create_window(400, 30, window=label_wip2)
+
 
 ###################################################################################################################
 
@@ -811,11 +914,51 @@ txtbox_statistiche.grid(column=0, row=2)
 tabAmiciControl = ttk.Notebook(tabAmici)
 tabMieiAmici = ttk.Frame(tabAmiciControl)
 tabCercaAmici = ttk.Frame(tabAmiciControl)
+tabAmiciSuggeriti = ttk.Frame(tabAmiciControl)
 
 
 tabAmiciControl.add(tabMieiAmici, text ='Miei Amici')
 tabAmiciControl.add(tabCercaAmici, text ='Cerca Amici')
+tabAmiciControl.add(tabAmiciSuggeriti, text ='Amici Suggeriti')
 tabAmiciControl.pack(expand = 1, fill ="both")
+
+## label work in progress
+canvas_wip = tk.Canvas(tabAmiciSuggeriti, width = 400, height = 20)
+canvas_wip.grid(column=0, row=4)
+label_wip= tk.Label(tabAmiciSuggeriti, text= "work in progress")
+canvas_wip.create_window(400, 30, window=label_wip)
+
+# textbox per visualizzare numero amici 
+txtbox_numeroAmici = tk.Text(tabMieiAmici, height=2, width=100)
+txtbox_numeroAmici.configure(state='disabled')
+txtbox_numeroAmici.grid(column=0, row=0)
+
+# textbox per tutti gli amici 
+txtbox_mieiAmici = tk.Text(tabMieiAmici, height=10, width=100)
+txtbox_mieiAmici.configure(state='disabled')
+txtbox_mieiAmici.grid(column=0, row=3)
+
+# campo inserimento codice
+canvas_codice = tk.Canvas(tabMieiAmici, width = 400, height = 20)
+canvas_codice.grid(column=0, row=4)
+entry_codice_amico = tk.Entry(tabMieiAmici) 
+canvas_codice.create_window(70, 10, window=entry_codice_amico, width=50)
+entry_codice_amico.configure(state='disabled')
+
+## label inserimento codice
+label_codiceamico= tk.Label(tabMieiAmici, text= "Codice")
+canvas_codice.create_window(0, 10, window=label_codiceamico)
+
+# bottone per visualizzare i film dell'amico seguito
+visualizzaFilmAmico = tk.Button(tabMieiAmici, text="Vedi i film del tuo amico", command=lambda: visualizzaFilm(entry_codice_amico.get()), width=20)
+visualizzaFilmAmico.grid(column=0, row=4)
+canvas_codice.create_window(200, 10, window=visualizzaFilmAmico)
+visualizzaFilmAmico.configure(state='disabled')
+
+# textbox per visualizzare i film degli amici 
+txtbox_filmAmici = tk.Text(tabMieiAmici, height=100, width=100)
+txtbox_filmAmici.configure(state='disabled')
+txtbox_filmAmici.grid(column=0, row=5)
 
 # campo di inserimento ricerca utente
 canvas_ricercaUtente = tk.Canvas(tabCercaAmici, width = 400, height = 20)
