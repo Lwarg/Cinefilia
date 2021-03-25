@@ -65,6 +65,9 @@ def login(user, DBpath):
             logoutbtn.configure(state='normal')
             entry_ricercaUtente.configure(state='normal')
             searchUserbtn.configure(state='normal')
+            entry_nuovoCommento.configure(state='normal')
+            pubblicabtn.configure(state='normal')
+            aggiornabtn.configure(state='normal')
             loginbtn.configure(state='disabled')
             # messaggio di output all'utente
             txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
@@ -83,6 +86,9 @@ def login(user, DBpath):
         searchUserbtn.configure(state='disabled')
         seguiUtentebtn.configure(state='disabled')
         eliminaAmicobtn.configure(state='disabled')
+        entry_nuovoCommento.configure(state='disabled')
+        pubblicabtn.configure(state='disabled')
+        aggiornabtn.configure(state='disabled')
     #except:
     #    txtbox_outputlogin.insert(tk.END,"Errore di accesso")
     #finally:
@@ -129,6 +135,11 @@ def logout():
     txtbox_output.delete("1.0","end")
     txtbox_output.configure(state='disabled')
 
+    txtbox_bacheca.configure(state='normal')
+    txtbox_bacheca.insert(tk.END, testo)
+    txtbox_bacheca.delete("1.0","end")
+    txtbox_bacheca.configure(state='disabled')
+
     entry_newMovie.configure(state='normal')
     entry_newMovie.insert(tk.END, '00')
     entry_newMovie.delete(0, 'end')
@@ -143,6 +154,11 @@ def logout():
     entry_ricercaUtente.insert(tk.END, '00')
     entry_ricercaUtente.delete(0, 'end')
     entry_ricercaUtente.configure(state='disabled')
+
+    entry_nuovoCommento.configure(state='normal')
+    entry_nuovoCommento.insert(tk.END, '00')
+    entry_nuovoCommento.delete(0, 'end')
+    entry_nuovoCommento.configure(state='disabled')
     
     # Disabilito il bottone logout e quelli delle altre tab
     logoutbtn.configure(state='disabled')
@@ -152,6 +168,9 @@ def logout():
     searchUserbtn.configure(state='disabled')
     seguiUtentebtn.configure(state='disabled')
     eliminaAmicobtn.configure(state='disabled')
+    pubblicabtn.configure(state='disabled')
+    aggiornabtn.configure(state='disabled')
+
     # abilito il login
     loginbtn.configure(state='normal')
     
@@ -550,6 +569,49 @@ def defollowUser(user):
     txtbox_output.configure(state='disabled')
     eliminaAmicobtn.configure(state='disabled')
 
+
+###################################################################################################################
+
+### funzione corrispondente pubblicabtn (pubblica un commento) 
+
+def pubblica(nuovoCommento):
+    global utente
+    global database
+
+    fin = open(database + '/bacheca.txt','a')
+    line = utente + "|" + nuovoCommento +"\n" 
+    fin.write(line)
+    fin.close
+    
+
+###################################################################################################################
+
+### funzione corrispondente aggiornabtn (aggiorna la bacheca) 
+  
+def aggiorna():
+    global utente
+    global database
+
+    f = open(database + '/bacheca.txt','r')
+    lista = []
+    for line in f:
+        lista.append(line)
+    lista.reverse()
+    f.close()
+
+    txtbox_bacheca.configure(state='normal')
+    txtbox_bacheca.insert(tk.END, "aggiorno...")
+    txtbox_bacheca.delete("1.0","end")
+    for post in lista:
+        user = post.split("|")[0]
+        commento = post.split("|")[1]
+        txtbox_bacheca.insert(tk.END, user+"\n")
+        txtbox_bacheca.insert(tk.END, commento + "\n\n")
+    
+
+    txtbox_bacheca.configure(state='disabled')
+
+
 ###################################################################################################################
 ###################################################################################################################
 ###################################################################################################################
@@ -575,12 +637,14 @@ tabCerca = ttk.Frame(tabControl)
 tabMyMovies = ttk.Frame(tabControl)
 tabStatistiche = ttk.Frame(tabControl)
 tabAmici = ttk.Frame(tabControl)
+tabHome = ttk.Frame(tabControl)
 
 tabControl.add(tabAccedi, text ='Accedi')
 tabControl.add(tabCerca, text ='Cerca')
 tabControl.add(tabMyMovies, text ='Miei Film')
 tabControl.add(tabStatistiche, text ='Statistiche')
 tabControl.add(tabAmici, text = 'Amici')
+tabControl.add(tabHome, text = 'Home')
 tabControl.pack(expand = 1, fill ="both")
 
 ###################################################################################################################
@@ -784,6 +848,33 @@ eliminaAmicobtn = tk.Button(tabCercaAmici, text="Non seguire più", command=lamb
 eliminaAmicobtn.grid(column=0, row=4)
 eliminaAmicobtn.configure(state='disabled')
 
+
+###################################################################################################################
+
+### TAB HOME ###
+
+
+# campo di inserimento nuovo commento
+canvas_nuovoCommento = tk.Canvas(tabHome, width = 400, height = 40)
+canvas_nuovoCommento.grid(column=0, row=1) 
+entry_nuovoCommento = tk.Entry (tabHome)
+canvas_nuovoCommento.create_window(200, 25, window=entry_nuovoCommento, width=800, height=40)
+entry_nuovoCommento.configure(state='disabled')
+
+# textbox per l'utente cercato
+txtbox_bacheca = tk.Text(tabHome, height=50, width=100)
+txtbox_bacheca.configure(state='disabled')
+txtbox_bacheca.grid(column=0, row=5)
+
+# bottone per pubblicare
+pubblicabtn = tk.Button(tabHome, text="Pubblica", command=lambda: pubblica(entry_nuovoCommento.get()), width=20)
+pubblicabtn.grid(column=0, row=3)
+pubblicabtn.configure(state='disabled')
+
+# bottone per aggiornare la home
+aggiornabtn = tk.Button(tabHome, text="Aggiorna", command=lambda: aggiorna(), width=20)
+aggiornabtn.grid(column=0, row=4)
+aggiornabtn.configure(state='disabled')
 
 ###################################################################################################################
 
