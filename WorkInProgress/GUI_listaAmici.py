@@ -63,9 +63,7 @@ global apikey
 global txtbox_mieiAmici
 global txtbox_filmAmici
 
-utente = "Simone"
-apikey = "8ca5768b&"
-database = "C:/Users/simac/Google Drive/appCinefilia"
+
 
 # finestra base
 tabListaAmici = tk.Tk()
