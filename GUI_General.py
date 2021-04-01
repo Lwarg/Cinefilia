@@ -259,10 +259,70 @@ def stampaPossibiliFilm(film):
 ###################################################################################################################
 
 ### funzione corrispondente al bottone addbtn (per aggiungere un film alla lista )
+
+#Funzioni per salvare il voto
+def salvaVoto1():
+    global voto
+    global win
+    voto = 1
+    win.destroy()
+def salvaVoto2():
+    global voto
+    global win
+    voto = 2
+    win.destroy()
+def salvaVoto3():
+    global voto
+    global win
+    voto = 3
+    win.destroy()
+def salvaVoto4():
+    global voto
+    global win
+    voto = 4
+    win.destroy()
+def salvaVoto5():
+    global voto
+    global win
+    voto = 5
+    win.destroy()
+def salvaVoto6():
+    global voto
+    global win
+    voto = 6
+    win.destroy()
+def salvaVoto7():
+    global voto
+    global win
+    voto = 7
+    win.destroy()
+def salvaVoto8():
+    global voto
+    global win
+    voto = 8
+    win.destroy()
+def salvaVoto9():
+    global voto
+    global win
+    voto = 9
+    win.destroy()
+def salvaVoto10():
+    global voto
+    global win
+    voto = 10
+    win.destroy()
+def salvaSkip():
+    global voto
+    global win
+    voto = 11
+    win.destroy()
+
 def aggiungiFilm(codice):
     global utente
     global database
     global data
+    global voto
+    global win
 
     
     # rendo scrivibile il textbox e la pulisco se già scritta
@@ -272,6 +332,34 @@ def aggiungiFilm(codice):
 
     # prendo l'id del film corrispondente al codice inserito nell'apposito campo
     film_scelto = data['Search'][int(codice)-1]['imdbID']
+
+    # aggiungo la possibilità di assegnare un voto al film tramite pop-up
+    win = tk.Toplevel()
+    win.wm_title("Window")
+    l = tk.Label(win, text="Aggiungi una valutazione al film!")
+    l.grid(row=0, column=0)
+    voto1 = ttk.Button(win, text="1", command=salvaVoto1)
+    voto1.grid(row=1, column=1)
+    voto2 = ttk.Button(win, text="2", command=salvaVoto2)
+    voto2.grid(row=1, column=2)
+    voto3 = ttk.Button(win, text="3", command=salvaVoto3)
+    voto3.grid(row=1, column=3)
+    voto4 = ttk.Button(win, text="4", command=salvaVoto4)
+    voto4.grid(row=1, column=4)
+    voto5 = ttk.Button(win, text="5", command=salvaVoto5)
+    voto5.grid(row=1, column=5)
+    voto6 = ttk.Button(win, text="6", command=salvaVoto6)
+    voto6.grid(row=1, column=6)
+    voto7 = ttk.Button(win, text="7", command=salvaVoto7)
+    voto7.grid(row=1, column=7)
+    voto8 = ttk.Button(win, text="8", command=salvaVoto8)
+    voto8.grid(row=1, column=8)
+    voto9 = ttk.Button(win, text="9", command=salvaVoto9)
+    voto9.grid(row=1, column=9)
+    voto10 = ttk.Button(win, text="10", command=salvaVoto10)
+    voto10.grid(row=1, column=10)
+    votoSkip = ttk.Button(win, text="Skip", command=salvaSkip)
+    votoSkip.grid(row=2, column=5)
 
     # il film viene appeso nel file elencoFilmdiuser.txt che si trova nella cartella sincronizzata con google drive
     filmGiaPresente = False
@@ -283,7 +371,7 @@ def aggiungiFilm(codice):
     fileTestoLettura.close()
     if not filmGiaPresente:
         fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
-        fileTestoScrittura.write("" + film_scelto + "\n")
+        fileTestoScrittura.write("" + film_scelto + "," + voto + "\n")
         txtbox_schedaTec.insert(tk.END, data['Search'][int(codice)-1]['Title']+" aggiunto ai Miei Film")
         fileTestoScrittura.close()
         visualizzaListaFilm()
@@ -734,7 +822,7 @@ global utente
 global apikey
 
 
-apikey = "8ca5768b&"
+apikey = "APIkey"
 
 # finestra base
 root = tk.Tk()
