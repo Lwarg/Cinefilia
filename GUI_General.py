@@ -262,78 +262,87 @@ def stampaPossibiliFilm(film):
 
 #Funzioni per salvare il voto
 def salvaVoto1():
-    global voto
-    global win
-    voto = 1
-    win.destroy()
-def salvaVoto2():
-    global voto
-    global win
-    voto = 2
-    win.destroy()
-def salvaVoto3():
-    global voto
-    global win
-    voto = 3
-    win.destroy()
-def salvaVoto4():
-    global voto
-    global win
-    voto = 4
-    win.destroy()
-def salvaVoto5():
-    global voto
-    global win
-    voto = 5
-    win.destroy()
-def salvaVoto6():
-    global voto
-    global win
-    voto = 6
-    win.destroy()
-def salvaVoto7():
-    global voto
-    global win
-    voto = 7
-    win.destroy()
-def salvaVoto8():
-    global voto
-    global win
-    voto = 8
-    win.destroy()
-def salvaVoto9():
-    global voto
-    global win
-    voto = 9
-    win.destroy()
-def salvaVoto10():
-    global voto
-    global win
-    voto = 10
-    win.destroy()
-def salvaSkip():
-    global voto
-    global win
-    voto = 11
-    win.destroy()
-
-def aggiungiFilm(codice):
     global utente
     global database
-    global data
-    global voto
     global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("1\n")
+    win.destroy()
+def salvaVoto2():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("2\n")
+    win.destroy()
+def salvaVoto3():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("3\n")
+    win.destroy()
+def salvaVoto4():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("4\n")
+    win.destroy()
+def salvaVoto5():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("5\n")
+    win.destroy()
+def salvaVoto6():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("6\n")
+    win.destroy()
+def salvaVoto7():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("7\n")
+    win.destroy()
+def salvaVoto8():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("8\n")
+    win.destroy()
+def salvaVoto9():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("9\n")
+    win.destroy()
+def salvaVoto10():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("10\n")
+    win.destroy()
+def salvaSkip():
+    global utente
+    global database
+    global win
+    fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
+    fileTestoScrittura.write("11\n")
+    win.destroy()
 
-    
-    # rendo scrivibile il textbox e la pulisco se già scritta
-    txtbox_schedaTec.configure(state='normal')
-    txtbox_schedaTec.insert(tk.END, "caricamento...")
-    txtbox_schedaTec.delete("1.0","end")
-
-    # prendo l'id del film corrispondente al codice inserito nell'apposito campo
-    film_scelto = data['Search'][int(codice)-1]['imdbID']
-
-    # aggiungo la possibilità di assegnare un voto al film tramite pop-up
+# aggiungo la possibilità di assegnare un voto al film tramite pop-up
+def valutazioneFilm():
+    global win
+    global voto
     win = tk.Toplevel()
     win.wm_title("Window")
     l = tk.Label(win, text="Aggiungi una valutazione al film!")
@@ -361,17 +370,34 @@ def aggiungiFilm(codice):
     votoSkip = ttk.Button(win, text="Skip", command=salvaSkip)
     votoSkip.grid(row=2, column=5)
 
+def aggiungiFilm(codice):
+    global utente
+    global database
+    global data
+    global voto
+    global win
+
+    
+    # rendo scrivibile il textbox e la pulisco se già scritta
+    txtbox_schedaTec.configure(state='normal')
+    txtbox_schedaTec.insert(tk.END, "caricamento...")
+    txtbox_schedaTec.delete("1.0","end")
+
+    # prendo l'id del film corrispondente al codice inserito nell'apposito campo
+    film_scelto = data['Search'][int(codice)-1]['imdbID']
+
     # il film viene appeso nel file elencoFilmdiuser.txt che si trova nella cartella sincronizzata con google drive
     filmGiaPresente = False
     fileTestoLettura = open(''+ database +'/elencoFilmdi'+utente+'.txt','r')
     for riga in fileTestoLettura:
-        if riga.strip() == film_scelto:
+        if riga.strip().split(",")[0] == film_scelto:
             filmGiaPresente = True
             break
     fileTestoLettura.close()
     if not filmGiaPresente:
         fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
-        fileTestoScrittura.write("" + film_scelto + "," + voto + "\n")
+        fileTestoScrittura.write("" + film_scelto + ",")
+        valutazioneFilm()
         txtbox_schedaTec.insert(tk.END, data['Search'][int(codice)-1]['Title']+" aggiunto ai Miei Film")
         fileTestoScrittura.close()
         visualizzaListaFilm()
@@ -443,7 +469,7 @@ def visualizzaListaFilm():
     count = 1
     lista = []
     for film in elencoFilm:
-        idFilm = film.strip()
+        idFilm = film.strip().split(",")[0]
         lista.append(idFilm)
     lista.reverse()
     for film in lista:
@@ -494,7 +520,7 @@ def visualizzaStatistiche():
 
     schede_tecniche = []
     for film in elencoFilm:
-        idFilm = film.strip()
+        idFilm = film.strip().split(",")[0]
         # ricerca film tramite API usando l'ID del film
         url = "http://www.omdbapi.com/?i="+idFilm+"&apikey="+apikey
         response = requests.request("GET", url)
@@ -822,7 +848,7 @@ global utente
 global apikey
 
 
-apikey = "APIkey"
+apikey = "8ca5768b&"
 
 # finestra base
 root = tk.Tk()
