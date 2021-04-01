@@ -23,11 +23,14 @@ def register(user, DBpath):
     userGiaPresente = False
     fileTestoLettura = open(''+ DBpath +'/users.txt','r')
     fileTestoScrittura = open(''+ DBpath +'/users.txt','a')
+    numero_utenti = 0
     for riga in fileTestoLettura:
-        if riga.strip() == user:
+        numero_utenti += 1
+        if riga.strip().split(",")[1] == user:
             userGiaPresente = True
     if not userGiaPresente:
-        fileTestoScrittura.write("" + user + "\n")
+        nuovo_id = str(numero_utenti+1001)
+        fileTestoScrittura.write(""+ nuovo_id +"," + user + "\n")
         nuovoFileTesto = open('' + DBpath + '/elencoFilmdi' + user + '.txt','w')
         nuovoFileListaAmici = open(''+ DBpath + '/amicidi'+ user + '.txt', 'w')
         txtbox_outputregistrazione.insert(tk.END,user+" registrato correttamente")
@@ -52,7 +55,7 @@ def login(user, DBpath):
     userEsistente = False
     utenti = open(''+ DBpath +'/users.txt','r')
     for riga in utenti:
-        if riga.strip() == user:
+        if riga.strip().split(",")[1]  == user:
             userEsistente = True
             utente = user
             # carico i dati dell'utente
@@ -643,7 +646,7 @@ def cercaUtente(user):
     fileTesto = open(database+'/users.txt','r')
     flag = 0
     for riga in fileTesto:
-        if riga.strip() == user:
+        if riga.strip().split(",")[1]  == user:
             flag = 1
             break
     if utente == user:
@@ -743,8 +746,8 @@ def visualizzaListaAmici():
     numeroAmici = 0
     fileUtenti = open(''+database+'/users.txt','r')
     for user in fileUtenti:
-        if utente != user.strip():
-            fileUtenti2 = open(''+database+'/amicidi'+user.strip()+'.txt','r')
+        if utente != user.strip().split(",")[1]:
+            fileUtenti2 = open(''+database+'/amicidi'+user.strip().split(",")[1] +'.txt','r')
             for amici in fileUtenti2:
                 if amici.strip() == utente:
                     numeroAmici += 1
@@ -848,7 +851,7 @@ global utente
 global apikey
 
 
-apikey = "8ca5768b&"
+apikey = "Insert valid API"
 
 # finestra base
 root = tk.Tk()
