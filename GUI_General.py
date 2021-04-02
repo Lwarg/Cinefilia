@@ -988,13 +988,26 @@ def visualizzaFilm(codice):
 ###################################################################################################################
 
 ### funzione corrispondente pubblicabtn (pubblica un commento) 
+def verificaVolgarita(frase):
+    
+    # tokenizzazione frase
+    # stemming frase
+    # levo stopwords frase
+    
+    # importare listaFeature e modello
+
+    # confronto frase sistemata con listaFeature e ottengo Xtest
+
+    #modello.predict(Xtest)
+    # if volgare apri pop up altrimenti vai liscio
+    
 
 def pubblica(nuovoCommento):
     global utente
     global database
 
     # NLP per verificare che la frase non abbia contenuti offensivi
-
+    verificaVolgarita(nuovoCommento)
 
     fin = open(database + '/bacheca.txt','a')
     line = utente + "|" + nuovoCommento +"\n" 
