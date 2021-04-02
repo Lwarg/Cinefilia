@@ -993,6 +993,9 @@ def pubblica(nuovoCommento):
     global utente
     global database
 
+    # NLP per verificare che la frase non abbia contenuti offensivi
+
+
     fin = open(database + '/bacheca.txt','a')
     line = utente + "|" + nuovoCommento +"\n" 
     fin.write(line)
@@ -1033,6 +1036,12 @@ def aggiornaSuggerimenti():
     global utente
     global database
     global apikey
+
+    # refresh textbox
+    txtbox_suggeriti.configure(state='normal')
+    txtbox_suggeriti.insert(tk.END, "...")
+    txtbox_suggeriti.delete("1.0","end")
+    txtbox_suggeriti.configure(state='disabled')
 
     # creazione automatica del dataset
     file_utenti = open(database + "/users.txt", 'r')
@@ -1138,7 +1147,7 @@ global utente
 global apikey
 
 
-apikey = "Insert valid Api"
+apikey = "Insert valid API"
 
 # finestra base
 root = tk.Tk()
