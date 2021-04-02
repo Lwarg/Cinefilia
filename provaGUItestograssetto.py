@@ -15,9 +15,11 @@ def aggiorna():
     for post in lista:
         user = post.split("|")[0]
         commento = post.split("|")[1]
-        txtbox.insert(tk.END, user+"\n")
-        txtbox.insert(tk.END, commento + "\n\n")
-        txtbox.tag_config(user, font='Helvetica 12 bold', foreground='blue')  # Set font, size and style
+        txtbox.tag_config("usertag", font='Italic 10 bold', foreground='blue')  # Set font, size and style
+        txtbox.tag_config("posttag", font='Italic 12')
+        txtbox.insert(tk.END, user+"\n", "usertag")
+        txtbox.insert(tk.END, commento + "\n", "posttag")
+        
 
 
 # finestra base
