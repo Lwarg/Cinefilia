@@ -887,7 +887,8 @@ def aggiornaSuggerimenti():
     userID = int(id_utente_loggato) - 1001
     user_rating_list = []
     not_rated = []
-    for i in range(25):
+    numero_totale_film = m_m_similarity.shape[0]
+    for i in range(numero_totale_film):
         user_rating_list.append(matriceUI[userID, i])
         if matriceUI[userID, i] == 0.0:
             not_rated.append(i)
@@ -895,7 +896,7 @@ def aggiornaSuggerimenti():
     # faccio la predizione dei ratings  
     suggested = []
     rating_pred = []
-    numero_totale_film = m_m_similarity.shape[0]
+    print(numero_totale_film)
     for col in range(numero_totale_film):
         if matriceUI[userID, col] == 0:
             # aggiungo l'item alla lista suggeriti
@@ -908,6 +909,8 @@ def aggiornaSuggerimenti():
                 item_similarity_list.append(m_m_similarity[col, i])
                 if i not in not_rated:
                     denominatore += m_m_similarity[col, i]
+            print(item_similarity_list)
+            print(user_rating_list)
             numeratore = np.dot(np.array(item_similarity_list), np.array(user_rating_list))
             if denominatore != 0:
                 rating_pred.append(int(numeratore/denominatore))
