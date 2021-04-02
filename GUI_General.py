@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 from tkinter import ttk
+from tkinter import *
 from tkinter import Canvas
 from PIL import Image,ImageTk
 from scipy import sparse
@@ -1183,14 +1184,46 @@ global utente
 global apikey
 
 
-apikey = "8ca5768b&"
+apikey = "Insert valid Apikey"
 
 # finestra base
 root = tk.Tk()
 
+maincolor = 'red3' #'#ffffcc'
+secondcolor = 'gold'
+style = ttk.Style()
+ 
+style.theme_create('cinema', settings={
+    ".": {
+        "configure": {
+            "background": maincolor, # All except tabs
+            "font": 'red'
+        }
+    },
+    "TNotebook": {
+        "configure": {
+            "background":maincolor, # Your margin color
+            "tabmargins": [2, 5, 0, 0], # margins: left, top, right, separator
+        }
+    },
+    "TNotebook.Tab": {
+        "configure": {
+            "background": maincolor, # tab color when not selected
+            "padding": [10, 2], # [space between text and horizontal tab-button border, space between text and vertical tab_button border]
+            "font":"white"
+        },
+        "map": {
+            "background": [("selected", secondcolor)], # Tab color when selected
+            "expand": [("selected", [1, 1, 1, 0])] # text margins
+        }
+    }
+})
+ 
+style.theme_use('cinema')
+
 # tabs di primo livello
 tabControl = ttk.Notebook(root)
-tabAccedi = ttk.Frame(tabControl)
+tabAccedi = ttk.Frame(tabControl, )
 tabCerca = ttk.Frame(tabControl)
 tabMyMovies = ttk.Frame(tabControl)
 tabStatistiche = ttk.Frame(tabControl)
@@ -1234,27 +1267,27 @@ tabAccediControl.pack(expand = 1, fill ="both")
 ### TAB REGISTRATI ###
 
 # campo di inserimento nuovo username
-canvas_newUser = tk.Canvas(tabRegistra, width = 400, height = 20)
+canvas_newUser = tk.Canvas(tabRegistra, width = 400, height = 20, background=maincolor)
 canvas_newUser.grid(column=0, row=1)
 entry_newUser = tk.Entry (tabRegistra) 
 canvas_newUser.create_window(200, 10, window=entry_newUser)
 
 # label nuovo username
-label_newUser = tk.Label(tabRegistra, text= "Nuovo Username")
+label_newUser = tk.Label(tabRegistra, text= "Nuovo Username", background=maincolor)
 canvas_newUser.create_window(50, 10, window=label_newUser)
 
 # campo di inserimento path della cartella sincronizzata con google drive
-canvas_newDB = tk.Canvas(tabRegistra, width = 400, height = 20)
+canvas_newDB = tk.Canvas(tabRegistra, width = 400, height = 20, background=maincolor)
 canvas_newDB.grid(column=0, row=2)
 entry_newDB = tk.Entry (tabRegistra) 
 canvas_newDB.create_window(200, 10, window=entry_newDB)
 
 # label database
-label_newDB = tk.Label(tabRegistra, text= "Path Database")
+label_newDB = tk.Label(tabRegistra, text= "Path Database", background=maincolor)
 canvas_newDB.create_window(50, 10, window=label_newDB)
 
 # textbox per messaggio di output
-txtbox_outputregistrazione = tk.Text(tabRegistra, height=5, width=100)
+txtbox_outputregistrazione = tk.Text(tabRegistra, height=5, width=100, background=secondcolor)
 txtbox_outputregistrazione.configure(state='disabled')
 txtbox_outputregistrazione.grid(column=0, row=4)
 
@@ -1266,27 +1299,27 @@ registerbtn.grid(column=0, row=3)
 ### TAB LOGIN ###
 
 # campo di inserimento nuovo username
-canvas_User = tk.Canvas(tabLogin, width = 400, height = 20)
+canvas_User = tk.Canvas(tabLogin, width = 400, height = 20,background=maincolor)
 canvas_User.grid(column=0, row=1)
 entry_User = tk.Entry (tabLogin) 
 canvas_User.create_window(200, 10, window=entry_User)
 
 # label nuovo username
-label_User = tk.Label(tabLogin, text= "Username")
+label_User = tk.Label(tabLogin, text= "Username", background=maincolor)
 canvas_User.create_window(50, 10, window=label_User)
 
 # campo di inserimento path della cartella sincronizzata con google drive
-canvas_DB = tk.Canvas(tabLogin, width = 400, height = 20)
+canvas_DB = tk.Canvas(tabLogin, width = 400, height = 20, background=maincolor)
 canvas_DB.grid(column=0, row=2)
 entry_DB = tk.Entry (tabLogin) 
 canvas_DB.create_window(200, 10, window=entry_DB)
 
 # label database
-label_DB = tk.Label(tabLogin, text= "Path Database")
+label_DB = tk.Label(tabLogin, text= "Path Database", background=maincolor)
 canvas_DB.create_window(50, 10, window=label_DB)
 
 # textbox per messaggio di output
-txtbox_outputlogin = tk.Text(tabLogin, height=5, width=100)
+txtbox_outputlogin = tk.Text(tabLogin, height=5, width=100, background=secondcolor)
 txtbox_outputlogin.configure(state='disabled')
 txtbox_outputlogin.grid(column=0, row=4)
 
@@ -1304,34 +1337,34 @@ logoutbtn.configure(state='disabled')
 ### TAB CERCA ###
 
 # campo di inserimento titolo del film
-canvas_newMovie = tk.Canvas(tabCerca, width = 400, height = 20)
+canvas_newMovie = tk.Canvas(tabCerca, width = 400, height = 20, background=maincolor)
 canvas_newMovie.grid(column=0, row=0)
 entry_newMovie = tk.Entry(tabCerca) 
 canvas_newMovie.create_window(200, 10, window=entry_newMovie, width=200)
 entry_newMovie.configure(state='disabled')
 
 ## label nuovo film
-label_newMovie = tk.Label(tabCerca, text= "Titolo film")
+label_newMovie = tk.Label(tabCerca, text= "Titolo film", background=maincolor)
 canvas_newMovie.create_window(50, 10, window=label_newMovie)
 
 # textbox per tutti i film 
-txtbox_possibiliFilm = tk.Text(tabCerca, height=10, width=100)
+txtbox_possibiliFilm = tk.Text(tabCerca, height=10, width=100, background=secondcolor)
 txtbox_possibiliFilm.configure(state='disabled')
 txtbox_possibiliFilm.grid(column=0, row=2)
 
 # campo inserimento codice
-canvas_codice = tk.Canvas(tabCerca, width = 400, height = 20)
+canvas_codice = tk.Canvas(tabCerca, width = 400, height = 20, background=maincolor)
 canvas_codice.grid(column=0, row=3)
 entry_codice = tk.Entry(tabCerca) 
 canvas_codice.create_window(70, 10, window=entry_codice, width=50)
 entry_codice.configure(state='disabled')
 
 ## label inserimento codice
-label_codice= tk.Label(tabCerca, text= "Codice")
+label_codice= tk.Label(tabCerca, text= "Codice", background=maincolor)
 canvas_codice.create_window(0, 10, window=label_codice)
 
 # textbox per scheda tecnica
-txtbox_schedaTec = tk.Text(tabCerca, height=10, width=100)
+txtbox_schedaTec = tk.Text(tabCerca, height=10, width=100, background=secondcolor)
 txtbox_schedaTec.configure(state='disabled')
 txtbox_schedaTec.grid(column=0, row=4)
 
@@ -1368,7 +1401,7 @@ txtbox_mieiFilm.grid(column=0, row=2)
 ### TAB STATISTICHE ###
 
 # textbox con le statistiche dei film visti dall'utente (si parte dall'ultimo e si va a ritroso)
-txtbox_statistiche = tk.Text(tabStatistiche, height=100, width=100)
+txtbox_statistiche = tk.Text(tabStatistiche, height=100, width=100, background=secondcolor)
 txtbox_statistiche.configure(state='disabled')
 txtbox_statistiche.grid(column=0, row=2)
 
@@ -1389,30 +1422,30 @@ tabAmiciControl.add(tabAmiciSuggeriti, text ='Amici Suggeriti')
 tabAmiciControl.pack(expand = 1, fill ="both")
 
 ## label work in progress
-canvas_wip = tk.Canvas(tabAmiciSuggeriti, width = 400, height = 20)
+canvas_wip = tk.Canvas(tabAmiciSuggeriti, width = 400, height = 20, background=maincolor)
 canvas_wip.grid(column=0, row=4)
 label_wip= tk.Label(tabAmiciSuggeriti, text= "work in progress")
 canvas_wip.create_window(400, 30, window=label_wip)
 
 # textbox per visualizzare numero amici 
-txtbox_numeroAmici = tk.Text(tabMieiAmici, height=2, width=100)
+txtbox_numeroAmici = tk.Text(tabMieiAmici, height=2, width=100, background=secondcolor)
 txtbox_numeroAmici.configure(state='disabled')
 txtbox_numeroAmici.grid(column=0, row=1)
 
 # textbox per tutti gli amici 
-txtbox_mieiAmici = tk.Text(tabMieiAmici, height=10, width=100)
+txtbox_mieiAmici = tk.Text(tabMieiAmici, height=10, width=100, background=secondcolor)
 txtbox_mieiAmici.configure(state='disabled')
 txtbox_mieiAmici.grid(column=0, row=4)
 
 # campo inserimento codice
-canvas_codice = tk.Canvas(tabMieiAmici, width = 400, height = 20)
+canvas_codice = tk.Canvas(tabMieiAmici, width = 400, height = 20, background=maincolor)
 canvas_codice.grid(column=0, row=5)
 entry_codice_amico = tk.Entry(tabMieiAmici) 
 canvas_codice.create_window(70, 10, window=entry_codice_amico, width=50)
 entry_codice_amico.configure(state='disabled')
 
 ## label inserimento codice
-label_codiceamico= tk.Label(tabMieiAmici, text= "Codice")
+label_codiceamico= tk.Label(tabMieiAmici, text= "Codice",background=maincolor)
 canvas_codice.create_window(0, 10, window=label_codiceamico)
 
 # bottone per aggiornare il campo amici di un utente
@@ -1427,19 +1460,19 @@ canvas_codice.create_window(200, 10, window=visualizzaFilmAmico)
 visualizzaFilmAmico.configure(state='disabled')
 
 # textbox per visualizzare i film degli amici 
-txtbox_filmAmici = tk.Text(tabMieiAmici, height=100, width=100)
+txtbox_filmAmici = tk.Text(tabMieiAmici, height=100, width=100, background=secondcolor)
 txtbox_filmAmici.configure(state='disabled')
 txtbox_filmAmici.grid(column=0, row=6)
 
 # campo di inserimento ricerca utente
-canvas_ricercaUtente = tk.Canvas(tabCercaAmici, width = 400, height = 20)
+canvas_ricercaUtente = tk.Canvas(tabCercaAmici, width = 400, height = 20, background=maincolor)
 canvas_ricercaUtente.grid(column=0, row=0) 
 entry_ricercaUtente = tk.Entry (tabCercaAmici)
 canvas_ricercaUtente.create_window(200, 10, window=entry_ricercaUtente, width=200)
 entry_ricercaUtente.configure(state='disabled')
 
 ## label ricerca utente
-label_ricercaUtente = tk.Label(text= "Cerca utente")
+label_ricercaUtente = tk.Label(text= "Cerca utente", background=maincolor)
 canvas_ricercaUtente.create_window(50, 10, window=label_ricercaUtente)
 
 # bottone per effettuare la ricerca di un utente
@@ -1448,7 +1481,7 @@ searchUserbtn.grid(column=0, row=1)
 searchUserbtn.configure(state='disabled')
 
 # textbox per l'utente cercato
-txtbox_output = tk.Text(tabCercaAmici, height=2, width=100)
+txtbox_output = tk.Text(tabCercaAmici, height=2, width=100, background=secondcolor)
 txtbox_output.configure(state='disabled')
 txtbox_output.grid(column=0, row=2)
 
@@ -1469,14 +1502,14 @@ eliminaAmicobtn.configure(state='disabled')
 
 
 # campo di inserimento nuovo commento
-canvas_nuovoCommento = tk.Canvas(tabHome, width = 400, height = 40)
+canvas_nuovoCommento = tk.Canvas(tabHome, width = 400, height = 40, background=maincolor)
 canvas_nuovoCommento.grid(column=0, row=1) 
 entry_nuovoCommento = tk.Entry (tabHome)
 canvas_nuovoCommento.create_window(200, 25, window=entry_nuovoCommento, width=800, height=40)
 entry_nuovoCommento.configure(state='disabled')
 
 # textbox per bacheca
-txtbox_bacheca = tk.Text(tabHome, height=50, width=100)
+txtbox_bacheca = tk.Text(tabHome, height=50, width=100, background=secondcolor)
 txtbox_bacheca.configure(state='disabled')
 txtbox_bacheca.grid(column=0, row=5)
 
