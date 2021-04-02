@@ -3,8 +3,14 @@ import requests
 import json
 import io
 import operator
+import pandas as pd
+import numpy as np
+
 from tkinter import ttk
 from PIL import Image,ImageTk
+from scipy import sparse
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import mean_squared_error
 
 
 ###################################################################################################################
@@ -73,6 +79,7 @@ def login(user, DBpath):
             pubblicabtn.configure(state='normal')
             aggiornabtn.configure(state='normal')
             visualizzaAmici.configure(state='normal')
+            suggeriscibtn.configure(state='normal')
             loginbtn.configure(state='disabled')
             # messaggio di output all'utente
             txtbox_outputlogin.insert(tk.END,"Accesso effettuato come "+user)
@@ -95,6 +102,7 @@ def login(user, DBpath):
         pubblicabtn.configure(state='disabled')
         aggiornabtn.configure(state='disabled')
         visualizzaAmici.configure(state='disabled')
+        suggeriscibtn.configure(state='disabled')
     #except:
     #    txtbox_outputlogin.insert(tk.END,"Errore di accesso")
     #finally:
@@ -161,6 +169,11 @@ def logout():
     txtbox_bacheca.delete("1.0","end")
     txtbox_bacheca.configure(state='disabled')
 
+    txtbox_suggeriti.configure(state='normal')
+    txtbox_suggeriti.insert(tk.END, testo)
+    txtbox_suggeriti.delete("1.0","end")
+    txtbox_suggeriti.configure(state='disabled')
+
     entry_newMovie.configure(state='normal')
     entry_newMovie.insert(tk.END, '00')
     entry_newMovie.delete(0, 'end')
@@ -198,13 +211,12 @@ def logout():
     pubblicabtn.configure(state='disabled')
     aggiornabtn.configure(state='disabled')
     visualizzaAmici.configure(state='disabled')
+    suggeriscibtn.configure(state='disabled')
 
     # abilito il login
     loginbtn.configure(state='normal')
     
     
-
-
 ###################################################################################################################
 
 ### funzione corrispondente al bottone searchFilmbtn (per cercare un nuovo film)
@@ -261,7 +273,7 @@ def stampaPossibiliFilm(film):
 
 ###################################################################################################################
 
-### funzione corrispondente al bottone addbtn (per aggiungere un film alla lista )
+### funzioni corrispondenti al bottone addbtn (per aggiungere un film alla lista )
 
 #Funzioni per salvare il voto
 def salvaVoto1():
@@ -835,6 +847,104 @@ def aggiorna():
 
     txtbox_bacheca.configure(state='disabled')
 
+###################################################################################################################
+
+### funzione corrispondente suggeriscibtn (aggiorna i film suggeriti) 
+def aggiornaSuggerimenti():
+    global utente
+    global database
+    global apikey
+
+    # creazione automatica del dataset
+    file_utenti = open(database + "/users.txt", 'r')
+    dataset = []
+    for dati_utente in file_utenti:
+        id_utente = dati_utente.split(",")[0]
+        nome_utente = dati_utente.strip().split(",")[1]
+        if nome_utente == utente:
+            id_utente_loggato = id_utente
+        file_film = open(database + "/elencoFilmdi" + nome_utente + ".txt", 'r')
+        for dati_film in file_film:
+            id_film = dati_film.split(",")[0]
+            voto_film = dati_film.strip().split(",")[1]
+            nuova_istanza = [id_utente, id_film, int(voto_film)]
+            dataset.append(nuova_istanza)
+        file_film.close()
+    file_utenti.close()
+
+    df = pd.DataFrame(dataset, columns=['User', 'Item', 'Rating'])
+    df.dropna(inplace=True)
+
+    # Creazione matrice USER-ITEM
+    matriceUI = df.pivot_table(index=['User'], columns=['Item'], values='Rating').fillna(0)
+    # converto la pivot table in matrice sparsa
+    matriceUI = sparse.lil_matrix(matriceUI)
+
+    # Creazione matrice ITEM-ITEM similarity
+    m_m_similarity = cosine_similarity(matriceUI.T, dense_output = False)
+
+    # inizializzo alcune variabili che mi servono
+    userID = int(id_utente_loggato) - 1001
+    user_rating_list = []
+    not_rated = []
+    for i in range(25):
+        user_rating_list.append(matriceUI[userID, i])
+        if matriceUI[userID, i] == 0.0:
+            not_rated.append(i)
+
+    # faccio la predizione dei ratings  
+    suggested = []
+    rating_pred = []
+    numero_totale_film = m_m_similarity.shape[0]
+    for col in range(numero_totale_film):
+        if matriceUI[userID, col] == 0:
+            # aggiungo l'item alla lista suggeriti
+            suggested.append(df['Item'].iloc[col])
+
+            # predico che voto l'user darebbe all'item
+            item_similarity_list = []
+            denominatore = 0
+            for i in range(numero_totale_film):
+                item_similarity_list.append(m_m_similarity[col, i])
+                if i not in not_rated:
+                    denominatore += m_m_similarity[col, i]
+            numeratore = np.dot(np.array(item_similarity_list), np.array(user_rating_list))
+            if denominatore != 0:
+                rating_pred.append(int(numeratore/denominatore))
+            else:
+                rating_pred.append('NaN')
+
+    film_da_suggerire = sorted(zip(rating_pred, suggested), reverse=True)[:3]
+
+    txtbox_suggeriti.configure(state='normal')
+    #print('Items suggested to',utente,':',film_da_suggerire)
+    #print(film_da_suggerire[0][1])
+    
+    # mandare a video le locandine dei film suggeriti
+    for i in range(len(film_da_suggerire)):
+        try:
+            url = "http://www.omdbapi.com/?i="+film_da_suggerire[i][1]+"&apikey="+apikey
+            response = requests.request("GET", url)
+            data = json.loads(response.text)
+            #testo = str(count)+" - "+ data['Title'].upper() + "\n"
+            #txtbox_mieiFilm.insert(tk.END, testo)
+            url_immagine = ""+ data ['Poster'] + ""
+            response = requests.get(url_immagine)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(io.BytesIO(img_data))) 
+            immagine = tk.Label(image=img)
+            immagine.image = img
+            txtbox_suggeriti.image_create(tk.END, image=img)
+            txtbox_suggeriti.insert(tk.END, "    ")
+            #immagine.place(x=500, y=count*100)
+        except:
+            url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
+            response = requests.request("GET", url)
+            data = json.loads(response.text)
+            testo = str(count)+" - "+ data['Title'].upper() + "\n"
+            txtbox_suggeriti.insert(tk.END, testo)
+
+    txtbox_suggeriti.configure(state='disabled')
 
 ###################################################################################################################
 ###################################################################################################################
@@ -1143,7 +1253,7 @@ entry_nuovoCommento = tk.Entry (tabHome)
 canvas_nuovoCommento.create_window(200, 25, window=entry_nuovoCommento, width=800, height=40)
 entry_nuovoCommento.configure(state='disabled')
 
-# textbox per l'utente cercato
+# textbox per bacheca
 txtbox_bacheca = tk.Text(tabHome, height=50, width=100)
 txtbox_bacheca.configure(state='disabled')
 txtbox_bacheca.grid(column=0, row=5)
@@ -1157,6 +1267,23 @@ pubblicabtn.configure(state='disabled')
 aggiornabtn = tk.Button(tabHome, text="Aggiorna", command=lambda: aggiorna(), width=20)
 aggiornabtn.grid(column=0, row=4)
 aggiornabtn.configure(state='disabled')
+
+
+###################################################################################################################
+
+### TAB FILM SUGGERITI ###
+
+# textbox per i film suggeriti
+txtbox_suggeriti = tk.Text(tabSuggeriti, height=50, width=100)
+txtbox_suggeriti.configure(state='disabled')
+txtbox_suggeriti.grid(column=0, row=1)
+
+
+# bottone per aggiornare i suggerimenti
+suggeriscibtn = tk.Button(tabSuggeriti, text="Aggiorna", command=lambda: aggiornaSuggerimenti(), width=20)
+suggeriscibtn.grid(column=0, row=0)
+suggeriscibtn.configure(state='disabled')
+
 
 ###################################################################################################################
 

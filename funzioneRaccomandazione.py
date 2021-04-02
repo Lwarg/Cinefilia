@@ -1,13 +1,32 @@
-import random
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
 from scipy import sparse
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import mean_squared_error
 
-df = pd.read_csv("provaDatasetRaccomandazione.csv", sep=",")
+utente = 'insert user'
+database = 'insert path'
+
+
+# creazione automatica del dataset
+file_utenti = open(database + "/users.txt", 'r')
+dataset = []
+for dati_utente in file_utenti:
+    id_utente = dati_utente.split(",")[0]
+    nome_utente = dati_utente.strip().split(",")[1]
+    if nome_utente == utente:
+        id_utente_loggato = id_utente
+    file_film = open(database + "/elencoFilmdi" + nome_utente + ".txt", 'r')
+    for dati_film in file_film:
+        id_film = dati_film.split(",")[0]
+        voto_film = dati_film.strip().split(",")[1]
+        nuova_istanza = [id_utente, id_film, int(voto_film)]
+        dataset.append(nuova_istanza)
+    file_film.close()
+file_utenti.close()
+
+df = pd.DataFrame(dataset, columns=['User', 'Item', 'Rating'])
 df.dropna(inplace=True)
 
 # Creazione matrice USER-ITEM
@@ -18,14 +37,11 @@ matriceUI = sparse.lil_matrix(matriceUI)
 # Creazione matrice ITEM-ITEM similarity
 m_m_similarity = cosine_similarity(matriceUI.T, dense_output = False)
 
-d = {'ID':list(range(1,26)), 'Title':list(range(1,26))}
+d = {'ID':list(df['Item']), 'Title':list(df['Item'])}
 item_title_df = pd.DataFrame(d, columns=['ID','Title'])
 
-# specifico l'user per cui voglio fare la raccomandazione\n",
-userID = 5
-
 # inizializzo alcune variabili che mi servono
-userID -= 1
+userID = int(id_utente_loggato) - 1001
 user_rating_list = []
 not_rated = []
 for i in range(25):
@@ -36,7 +52,8 @@ for i in range(25):
 # faccio la predizione dei ratings  
 suggested = []
 rating_pred = []
-for col in range(25):
+numero_totale_film = m_m_similarity.shape[0]
+for col in range(numero_totale_film):
     if matriceUI[userID, col] == 0:
         # aggiungo l'item alla lista suggeriti
         suggested.append(item_title_df['ID'].iloc[col])
@@ -44,7 +61,7 @@ for col in range(25):
         # predico che voto l'user darebbe all'item
         item_similarity_list = []
         denominatore = 0
-        for i in range(25):
+        for i in range(numero_totale_film):
             item_similarity_list.append(m_m_similarity[col, i])
             if i not in not_rated:
                 denominatore += m_m_similarity[col, i]
@@ -55,5 +72,5 @@ for col in range(25):
             rating_pred.append('NaN')
 
 
-print('Items suggested to user',userID+1,':',suggested)
+print('Items suggested to',utente,':',suggested)
 print('Predicted ratings given by user',userID+1,':',rating_pred)
