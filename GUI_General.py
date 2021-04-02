@@ -877,6 +877,7 @@ def aggiornaSuggerimenti():
 
     # Creazione matrice USER-ITEM
     matriceUI = df.pivot_table(index=['User'], columns=['Item'], values='Rating').fillna(0)
+    item_list = list(matriceUI.columns)
     # converto la pivot table in matrice sparsa
     matriceUI = sparse.lil_matrix(matriceUI)
 
@@ -896,11 +897,10 @@ def aggiornaSuggerimenti():
     # faccio la predizione dei ratings  
     suggested = []
     rating_pred = []
-    print(numero_totale_film)
     for col in range(numero_totale_film):
         if matriceUI[userID, col] == 0:
             # aggiungo l'item alla lista suggeriti
-            suggested.append(df['Item'].iloc[col])
+            suggested.append(item_list[col])
 
             # predico che voto l'user darebbe all'item
             item_similarity_list = []
@@ -909,8 +909,6 @@ def aggiornaSuggerimenti():
                 item_similarity_list.append(m_m_similarity[col, i])
                 if i not in not_rated:
                     denominatore += m_m_similarity[col, i]
-            print(item_similarity_list)
-            print(user_rating_list)
             numeratore = np.dot(np.array(item_similarity_list), np.array(user_rating_list))
             if denominatore != 0:
                 rating_pred.append(int(numeratore/denominatore))
@@ -918,12 +916,9 @@ def aggiornaSuggerimenti():
                 rating_pred.append('NaN')
 
     film_da_suggerire = sorted(zip(rating_pred, suggested), reverse=True)[:3]
-
-    txtbox_suggeriti.configure(state='normal')
-    #print('Items suggested to',utente,':',film_da_suggerire)
-    #print(film_da_suggerire[0][1])
-    
+   
     # mandare a video le locandine dei film suggeriti
+    txtbox_suggeriti.configure(state='normal')
     for i in range(len(film_da_suggerire)):
         try:
             url = "http://www.omdbapi.com/?i="+film_da_suggerire[i][1]+"&apikey="+apikey
@@ -964,7 +959,7 @@ global utente
 global apikey
 
 
-apikey = "Insert valid API"
+apikey = "Insert valid Api"
 
 # finestra base
 root = tk.Tk()
