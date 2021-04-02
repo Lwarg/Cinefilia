@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 from tkinter import ttk
+from tkinter import Canvas
 from PIL import Image,ImageTk
 from scipy import sparse
 from sklearn.metrics.pairwise import cosine_similarity
@@ -280,71 +281,245 @@ def salvaVoto1():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("1\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one_left = tk.Canvas(win_due,width=100,height=100)
+    star_one_left.grid(row=1,column=0)
+    points1 = [50,70,25,90,35,60,10,40,40,40,50,10]
+    star_one_left.create_polygon(points1,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto2():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("2\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto3():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("3\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_one_left = tk.Canvas(win_due,width=100,height=100)
+    star_one_left.grid(row=1,column=1)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    points1 = [50,70,25,90,35,60,10,40,40,40,50,10]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_one_left.create_polygon(points1,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto4():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("4\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto5():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("5\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    star_one_left = tk.Canvas(win_due,width=100,height=100)
+    star_one_left.grid(row=1,column=2)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    points1 = [50,70,25,90,35,60,10,40,40,40,50,10]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    star_one_left.create_polygon(points1,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto6():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("6\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    star_three = tk.Canvas(win_due,width=100,height=100)
+    star_three.grid(row=1,column=2)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    star_three.create_polygon(points,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto7():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("7\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    star_three = tk.Canvas(win_due,width=100,height=100)
+    star_three.grid(row=1,column=2)
+    star_one_left = tk.Canvas(win_due,width=100,height=100)
+    star_one_left.grid(row=1,column=3)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    points1 = [50,70,25,90,35,60,10,40,40,40,50,10]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    star_three.create_polygon(points,outline='red',fill='orange',width=2)
+    star_one_left.create_polygon(points1,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)   
     win.destroy()
 def salvaVoto8():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("8\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    star_three = tk.Canvas(win_due,width=100,height=100)
+    star_three.grid(row=1,column=2)
+    star_four = tk.Canvas(win_due,width=100,height=100)
+    star_four.grid(row=1,column=3)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    star_three.create_polygon(points,outline='red',fill='orange',width=2)
+    star_four.create_polygon(points,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto9():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("9\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    star_three = tk.Canvas(win_due,width=100,height=100)
+    star_three.grid(row=1,column=2)
+    star_four = tk.Canvas(win_due,width=100,height=100)
+    star_four.grid(row=1,column=3)
+    star_one_left = tk.Canvas(win_due,width=100,height=100)
+    star_one_left.grid(row=1,column=4)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    points1 = [50,70,25,90,35,60,10,40,40,40,50,10]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    star_three.create_polygon(points,outline='red',fill='orange',width=2)
+    star_four.create_polygon(points,outline='red',fill='orange',width=2)
+    star_one_left.create_polygon(points1,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaVoto10():
     global utente
     global database
     global win
+    global win_due
     fileTestoScrittura = open(''+ database +'/elencoFilmdi'+utente+'.txt','a')
     fileTestoScrittura.write("10\n")
+    win_due = tk.Toplevel()
+    win_due.wm_title("Window")
+    l_due = tk.Label(win_due, text="Grazie per il tuo voto!")
+    l_due.grid(row=0, column=0)
+    star_one = tk.Canvas(win_due,width=100,height=100)
+    star_one.grid(row=1,column=0)
+    star_two = tk.Canvas(win_due,width=100,height=100)
+    star_two.grid(row=1,column=1)
+    star_three = tk.Canvas(win_due,width=100,height=100)
+    star_three.grid(row=1,column=2)
+    star_four = tk.Canvas(win_due,width=100,height=100)
+    star_four.grid(row=1,column=3)
+    star_five = tk.Canvas(win_due,width=100,height=100)
+    star_five.grid(row=1,column=4)
+    points = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
+    star_one.create_polygon(points,outline='red',fill='orange',width=2)
+    star_two.create_polygon(points,outline='red',fill='orange',width=2)
+    star_three.create_polygon(points,outline='red',fill='orange',width=2)
+    star_four.create_polygon(points,outline='red',fill='orange',width=2)
+    star_five.create_polygon(points,outline='red',fill='orange',width=2)
+    bottone_uscita = tk.Button(win_due, text="OK", command=win_due.destroy,width=10)
+    bottone_uscita.grid(row=2,column=0)
     win.destroy()
 def salvaSkip():
     global utente
@@ -358,30 +533,34 @@ def salvaSkip():
 def valutazioneFilm():
     global win
     global voto
+    global img_one
+    global img_two
+    img_one = tk.PhotoImage(file='leftStar_white.png')
+    img_two = tk.PhotoImage(file='rightStar_white.png')
     win = tk.Toplevel()
     win.wm_title("Window")
     l = tk.Label(win, text="Aggiungi una valutazione al film!")
     l.grid(row=0, column=0)
-    voto1 = ttk.Button(win, text="1", command=salvaVoto1)
-    voto1.grid(row=1, column=1)
-    voto2 = ttk.Button(win, text="2", command=salvaVoto2)
-    voto2.grid(row=1, column=2)
-    voto3 = ttk.Button(win, text="3", command=salvaVoto3)
-    voto3.grid(row=1, column=3)
-    voto4 = ttk.Button(win, text="4", command=salvaVoto4)
-    voto4.grid(row=1, column=4)
-    voto5 = ttk.Button(win, text="5", command=salvaVoto5)
-    voto5.grid(row=1, column=5)
-    voto6 = ttk.Button(win, text="6", command=salvaVoto6)
-    voto6.grid(row=1, column=6)
-    voto7 = ttk.Button(win, text="7", command=salvaVoto7)
-    voto7.grid(row=1, column=7)
-    voto8 = ttk.Button(win, text="8", command=salvaVoto8)
-    voto8.grid(row=1, column=8)
-    voto9 = ttk.Button(win, text="9", command=salvaVoto9)
-    voto9.grid(row=1, column=9)
-    voto10 = ttk.Button(win, text="10", command=salvaVoto10)
-    voto10.grid(row=1, column=10)
+    stellaSinistra_uno = ttk.Button(win, image=img_one,command=salvaVoto1)
+    stellaSinistra_uno.grid(row=1, column=1)
+    stellaDestra_uno = ttk.Button(win, image=img_two, command=salvaVoto2)
+    stellaDestra_uno.grid(row=1, column=2)
+    stellaSinistra_due = ttk.Button(win, image=img_one, command=salvaVoto3)
+    stellaSinistra_due.grid(row=1, column=3)
+    stellaDestra_due = ttk.Button(win, image=img_two, command=salvaVoto4)
+    stellaDestra_due.grid(row=1, column=4)
+    stellaSinistra_tre = ttk.Button(win, image=img_one, command=salvaVoto5)
+    stellaSinistra_tre.grid(row=1, column=5)
+    stellaDestra_tre = ttk.Button(win, image = img_two, command=salvaVoto6)
+    stellaDestra_tre.grid(row=1, column=6)
+    stellaSinistra_quattro = ttk.Button(win, image = img_one, command=salvaVoto7)
+    stellaSinistra_quattro.grid(row=1, column=7)
+    stellaDestra_quattro = ttk.Button(win, image = img_two, command=salvaVoto8)
+    stellaDestra_quattro.grid(row=1, column=8)
+    stellaSinistra_cinque = ttk.Button(win, image = img_one, command=salvaVoto9)
+    stellaSinistra_cinque.grid(row=1, column=9)
+    stellaDestra_cinque = ttk.Button(win, image = img_two, command=salvaVoto10)
+    stellaDestra_cinque.grid(row=1, column=10)
     votoSkip = ttk.Button(win, text="Skip", command=salvaSkip)
     votoSkip.grid(row=2, column=5)
 
