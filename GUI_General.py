@@ -708,6 +708,9 @@ def visualizzaStatistiche():
     # rendo scrivibile il textbox
     txtbox_statistiche.configure(state='normal')
     txtbox_statistiche.insert(tk.END, "caricamento...")
+    txtbox_statistiche.tag_config("labeltag", font="Italic 12 bold", foreground="navy")
+    txtbox_statistiche.tag_config("texttag", font="Italic 11", foreground="black")
+    txtbox_statistiche.tag_config("texttagB", font="Italic 11 bold", foreground="black")
     txtbox_statistiche.delete("1.0","end")
 
     elencoFilm = open(database +'/elencoFilmdi'+ utente +'.txt','r')
@@ -722,7 +725,8 @@ def visualizzaStatistiche():
 
     # numero film visti
     numero_film_visti = len(schede_tecniche)
-    txtbox_statistiche.insert(tk.END,"Numero di film visti: "+str(numero_film_visti)+"\n")
+    txtbox_statistiche.insert(tk.END,"Numero di film visti: ", "labeltag")
+    txtbox_statistiche.insert(tk.END, str(numero_film_visti)+"\n\n", "texttag")
     durata = 0
     generi = dict()
     registi = dict()
@@ -759,7 +763,8 @@ def visualizzaStatistiche():
 
     # durata
     durata = int(durata/60*100)/100
-    txtbox_statistiche.insert(tk.END,"Tempo totale a guardare film: "+str(durata)+" ore\n")
+    txtbox_statistiche.insert(tk.END,"Tempo totale a guardare film: ", "labeltag")
+    txtbox_statistiche.insert(tk.END, str(durata)+" ore\n\n", "texttag")
 
     if len(generi) > 2:
         # genere più visto
@@ -775,10 +780,13 @@ def visualizzaStatistiche():
         film_terzoGenere = generi[terzoGenere]
         generi.pop(terzoGenere)
 
-        txtbox_statistiche.insert(tk.END, "\n GENERI PREFERITI \n")
-        txtbox_statistiche.insert(tk.END, primoGenere + ": "+ str(film_primoGenere) +" film\n")
-        txtbox_statistiche.insert(tk.END, secondoGenere + ": "+ str(film_secondoGenere) +" film\n")
-        txtbox_statistiche.insert(tk.END, terzoGenere + ": "+ str(film_terzoGenere) +" film\n")
+        txtbox_statistiche.insert(tk.END, "\n GENERI PREFERITI \n", "labeltag")
+        txtbox_statistiche.insert(tk.END, primoGenere + ": ", "texttagB") 
+        txtbox_statistiche.insert(tk.END, str(film_primoGenere) +" film\n", "texttag")
+        txtbox_statistiche.insert(tk.END, secondoGenere + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_secondoGenere) +" film\n", "texttag")
+        txtbox_statistiche.insert(tk.END, terzoGenere + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_terzoGenere) +" film\n", "texttag")
 
     if len(registi) > 2:
         # regista più seguito
@@ -794,10 +802,13 @@ def visualizzaStatistiche():
         film_terzoRegista = registi[terzoRegista]
         registi.pop(terzoRegista)
 
-        txtbox_statistiche.insert(tk.END, "\n REGISTI PREFERITI \n")
-        txtbox_statistiche.insert(tk.END, primoRegista + ": "+ str(film_primoRegista) +" film\n")
-        txtbox_statistiche.insert(tk.END, secondoRegista + ": "+ str(film_secondoRegista) +" film\n")
-        txtbox_statistiche.insert(tk.END, terzoRegista + ": "+ str(film_terzoRegista) +" film\n")
+        txtbox_statistiche.insert(tk.END, "\n REGISTI PREFERITI \n", "labeltag")
+        txtbox_statistiche.insert(tk.END, primoRegista + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_primoRegista) +" film\n", "texttag")
+        txtbox_statistiche.insert(tk.END, secondoRegista + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_secondoRegista) +" film\n", "texttag")
+        txtbox_statistiche.insert(tk.END, terzoRegista + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_terzoRegista) +" film\n", "texttag")
 
     if len(attori) > 2:
         # attori più seguiti
@@ -813,10 +824,13 @@ def visualizzaStatistiche():
         film_terzoAttore = attori[terzoAttore]
         attori.pop(terzoAttore)
 
-        txtbox_statistiche.insert(tk.END, "\n ATTORI PREFERITI \n")
-        txtbox_statistiche.insert(tk.END, primoAttore + ": "+ str(film_primoAttore) +" film\n")
-        txtbox_statistiche.insert(tk.END, secondoAttore + ": "+ str(film_secondoAttore) +" film\n")
-        txtbox_statistiche.insert(tk.END, terzoAttore + ": "+ str(film_terzoAttore) +" film\n")
+        txtbox_statistiche.insert(tk.END, "\n ATTORI PREFERITI \n", "labeltag")
+        txtbox_statistiche.insert(tk.END, primoAttore + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_primoAttore) +" film\n", "texttag")
+        txtbox_statistiche.insert(tk.END, secondoAttore + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_secondoAttore) +" film\n", "texttag")
+        txtbox_statistiche.insert(tk.END, terzoAttore + ": ", "texttagB")
+        txtbox_statistiche.insert(tk.END, str(film_terzoAttore) +" film\n", "texttag")
 
     # riblocco la scrivibilità del textbox
     txtbox_statistiche.configure(state='disabled')
@@ -930,7 +944,9 @@ def visualizzaListaAmici():
     txtbox_numeroAmici.configure(state='normal')
     txtbox_numeroAmici.insert(tk.END, "aggiorno...")
     txtbox_numeroAmici.delete("1.0","end")
-    txtbox_numeroAmici.insert(tk.END, "Segui: "+str(count-1))
+    txtbox_numeroAmici.tag_config("followtag", font = 'Italic 12 bold', foreground='navy')
+    txtbox_numeroAmici.insert(tk.END, "Segui: ", "followtag")
+    txtbox_numeroAmici.insert(tk.END,str(count-1)+" "*5)
     
 
     #segna quanti ti seguono
@@ -942,7 +958,8 @@ def visualizzaListaAmici():
             for amici in fileUtenti2:
                 if amici.strip() == utente:
                     numeroAmici += 1
-    txtbox_numeroAmici.insert(tk.END, "\nFollowers: "+str(numeroAmici))
+    txtbox_numeroAmici.insert(tk.END, "Followers: ", "followtag")
+    txtbox_numeroAmici.insert(tk.END,str(numeroAmici))
     txtbox_numeroAmici.configure(state='disabled')
 
     visualizzaFilmAmico.configure(state='normal')
@@ -972,9 +989,13 @@ def visualizzaFilm(codice):
     contatore = 1
     lista = []
     for film in listaFilm:
-        idFilm = film.strip()
+        idFilm = film.split(",")[0]
         lista.append(idFilm)
     lista.reverse()
+    if len(lista) > 1:
+        txtbox_filmAmici.tag_config("listaAmicoTag", font='Italic 12 bold', foreground='navy')
+        txtbox_filmAmici.insert(tk.END, "Film di "+amico+"\n", "listaAmicoTag")
+
     for film in lista:
         url = "http://www.omdbapi.com/?i="+film+"&apikey="+apikey
         response = requests.request("GET", url)
@@ -1036,8 +1057,10 @@ def aggiorna():
     for post in lista:
         user = post.split("|")[0]
         commento = post.split("|")[1]
-        txtbox_bacheca.insert(tk.END, user+"\n")
-        txtbox_bacheca.insert(tk.END, commento + "\n\n")
+        txtbox_bacheca.tag_config("usertag", font='Italic 10 bold', foreground='navy')  # Set font, size and style
+        txtbox_bacheca.tag_config("posttag", font='Italic 12')
+        txtbox_bacheca.insert(tk.END, user+"\n", "usertag")
+        txtbox_bacheca.insert(tk.END, commento + "\n\n", "posttag")
     
 
     txtbox_bacheca.configure(state='disabled')
@@ -1160,7 +1183,7 @@ global utente
 global apikey
 
 
-apikey = "Insert valid API"
+apikey = "8ca5768b&"
 
 # finestra base
 root = tk.Tk()
@@ -1236,7 +1259,7 @@ txtbox_outputregistrazione.configure(state='disabled')
 txtbox_outputregistrazione.grid(column=0, row=4)
 
 # bottone per effettuare la registrazione
-registerbtn = tk.Button(tabRegistra, text="Registrati", command=lambda: register(entry_newUser.get(), entry_newDB.get()), width=20)
+registerbtn = tk.Button(tabRegistra, text="Registrati", command=lambda: register(entry_newUser.get(), entry_newDB.get()), width=20, background="gold")
 registerbtn.grid(column=0, row=3)
 
 
@@ -1268,11 +1291,11 @@ txtbox_outputlogin.configure(state='disabled')
 txtbox_outputlogin.grid(column=0, row=4)
 
 # bottone per effettuare il login
-loginbtn = tk.Button(tabLogin, text="Login", command=lambda: login(entry_User.get(), entry_DB.get()), width=20)
+loginbtn = tk.Button(tabLogin, text="Login", command=lambda: login(entry_User.get(), entry_DB.get()), width=20, background="gold")
 loginbtn.grid(column=0, row=3)
 
 # bottone per effettuare il logout
-logoutbtn = tk.Button(tabLogin, text="Logout", command=lambda: logout(), width=20)
+logoutbtn = tk.Button(tabLogin, text="Logout", command=lambda: logout(), width=20, background="gold")
 logoutbtn.grid(column=0, row=5)
 logoutbtn.configure(state='disabled')
 
@@ -1313,18 +1336,18 @@ txtbox_schedaTec.configure(state='disabled')
 txtbox_schedaTec.grid(column=0, row=4)
 
 # bottone per effettuare la ricerca di un nuovo film
-searchFilmbtn = tk.Button(tabCerca, text="Cerca nuovo film", command=lambda: stampaPossibiliFilm(entry_newMovie.get()), width=20)
+searchFilmbtn = tk.Button(tabCerca, text="Cerca nuovo film", command=lambda: stampaPossibiliFilm(entry_newMovie.get()), width=20, background="gold")
 searchFilmbtn.grid(column=0, row=1)
 searchFilmbtn.configure(state='disabled')
 
 # bottone per effettuare aggiungere il nuovo film alla lista
-addFilmbtn = tk.Button(tabCerca, text="Aggiungi a lista", command=lambda: aggiungiFilm(entry_codice.get()), width=20)
+addFilmbtn = tk.Button(tabCerca, text="Aggiungi a lista", command=lambda: aggiungiFilm(entry_codice.get()), width=20, background="gold")
 addFilmbtn.grid(column=0, row=3)
 canvas_codice.create_window(200, 10, window=addFilmbtn)
 addFilmbtn.configure(state='disabled')
 
 # bottone per visualizzare la scheda tecnica del film
-schedaTecnicabtn = tk.Button(tabCerca, text="Scheda tecnica", command=lambda: mostraSchedaTecnica(entry_codice.get()), width=20)
+schedaTecnicabtn = tk.Button(tabCerca, text="Scheda tecnica", command=lambda: mostraSchedaTecnica(entry_codice.get()), width=20, background="gold")
 schedaTecnicabtn.grid(column=0, row=3)
 canvas_codice.create_window(400, 10, window=schedaTecnicabtn)
 schedaTecnicabtn.configure(state='disabled')
@@ -1335,7 +1358,7 @@ schedaTecnicabtn.configure(state='disabled')
 ### TAB MIEI FILM ###
 
 # textbox con tutti i film visti dall'utente (si parte dall'ultimo e si va a ritroso)
-txtbox_mieiFilm = tk.Text(tabMyMovies, height=50, width=100)
+txtbox_mieiFilm = tk.Text(tabMyMovies, height=50, width=100, background="red4")
 txtbox_mieiFilm.configure(state='disabled')
 txtbox_mieiFilm.grid(column=0, row=2)
 
@@ -1393,12 +1416,12 @@ label_codiceamico= tk.Label(tabMieiAmici, text= "Codice")
 canvas_codice.create_window(0, 10, window=label_codiceamico)
 
 # bottone per aggiornare il campo amici di un utente
-visualizzaAmici = tk.Button(tabMieiAmici, text="Aggiorna", command=lambda: visualizzaListaAmici(), width=20)
+visualizzaAmici = tk.Button(tabMieiAmici, text="Aggiorna", command=lambda: visualizzaListaAmici(), width=20, background="gold")
 visualizzaAmici.grid(column=0, row=0)
 visualizzaAmici.configure(state='disabled')
 
 # bottone per visualizzare i film dell'amico seguito
-visualizzaFilmAmico = tk.Button(tabMieiAmici, text="Vedi i film del tuo amico", command=lambda: visualizzaFilm(entry_codice_amico.get()), width=20)
+visualizzaFilmAmico = tk.Button(tabMieiAmici, text="Vedi i film del tuo amico", command=lambda: visualizzaFilm(entry_codice_amico.get()), width=20, background="gold")
 visualizzaFilmAmico.grid(column=0, row=4)
 canvas_codice.create_window(200, 10, window=visualizzaFilmAmico)
 visualizzaFilmAmico.configure(state='disabled')
@@ -1420,7 +1443,7 @@ label_ricercaUtente = tk.Label(text= "Cerca utente")
 canvas_ricercaUtente.create_window(50, 10, window=label_ricercaUtente)
 
 # bottone per effettuare la ricerca di un utente
-searchUserbtn = tk.Button(tabCercaAmici, text="Cerca", command=lambda: cercaUtente(entry_ricercaUtente.get()), width=20)
+searchUserbtn = tk.Button(tabCercaAmici, text="Cerca", command=lambda: cercaUtente(entry_ricercaUtente.get()), width=20, background="gold")
 searchUserbtn.grid(column=0, row=1)
 searchUserbtn.configure(state='disabled')
 
@@ -1430,12 +1453,12 @@ txtbox_output.configure(state='disabled')
 txtbox_output.grid(column=0, row=2)
 
 # bottone per "seguire" l'utente cercato
-seguiUtentebtn = tk.Button(tabCercaAmici, text="Segui!", command=lambda: followUser(entry_ricercaUtente.get()), width=20)
+seguiUtentebtn = tk.Button(tabCercaAmici, text="Segui!", command=lambda: followUser(entry_ricercaUtente.get()), width=20, background="gold")
 seguiUtentebtn.grid(column=0, row=3)
 seguiUtentebtn.configure(state='disabled')
 
 # bottone per "defolloware" l'utente cercato
-eliminaAmicobtn = tk.Button(tabCercaAmici, text="Non seguire più", command=lambda: defollowUser(entry_ricercaUtente.get()), width=20)
+eliminaAmicobtn = tk.Button(tabCercaAmici, text="Non seguire più", command=lambda: defollowUser(entry_ricercaUtente.get()), width=20, background="gold")
 eliminaAmicobtn.grid(column=0, row=4)
 eliminaAmicobtn.configure(state='disabled')
 
@@ -1458,12 +1481,12 @@ txtbox_bacheca.configure(state='disabled')
 txtbox_bacheca.grid(column=0, row=5)
 
 # bottone per pubblicare
-pubblicabtn = tk.Button(tabHome, text="Pubblica", command=lambda: pubblica(entry_nuovoCommento.get()), width=20)
+pubblicabtn = tk.Button(tabHome, text="Pubblica", command=lambda: pubblica(entry_nuovoCommento.get()), width=20, background="gold")
 pubblicabtn.grid(column=0, row=3)
 pubblicabtn.configure(state='disabled')
 
 # bottone per aggiornare la home
-aggiornabtn = tk.Button(tabHome, text="Aggiorna", command=lambda: aggiorna(), width=20)
+aggiornabtn = tk.Button(tabHome, text="Aggiorna", command=lambda: aggiorna(), width=20, background="gold")
 aggiornabtn.grid(column=0, row=4)
 aggiornabtn.configure(state='disabled')
 
@@ -1473,13 +1496,13 @@ aggiornabtn.configure(state='disabled')
 ### TAB FILM SUGGERITI ###
 
 # textbox per i film suggeriti
-txtbox_suggeriti = tk.Text(tabSuggeriti, height=50, width=100)
+txtbox_suggeriti = tk.Text(tabSuggeriti, height=50, width=100, background="red4")
 txtbox_suggeriti.configure(state='disabled')
 txtbox_suggeriti.grid(column=0, row=1)
 
 
 # bottone per aggiornare i suggerimenti
-suggeriscibtn = tk.Button(tabSuggeriti, text="Aggiorna", command=lambda: aggiornaSuggerimenti(), width=20)
+suggeriscibtn = tk.Button(tabSuggeriti, text="Aggiorna", command=lambda: aggiornaSuggerimenti(), width=20, background="gold")
 suggeriscibtn.grid(column=0, row=0)
 suggeriscibtn.configure(state='disabled')
 
