@@ -80,6 +80,7 @@ def login(user, DBpath):
             entry_nuovoCommento.configure(state='normal')
             pubblicabtn.configure(state='normal')
             aggiornabtn.configure(state='normal')
+            segnalabtn.configure(state='normal')
             visualizzaAmici.configure(state='normal')
             suggeriscibtn.configure(state='normal')
             loginbtn.configure(state='disabled')
@@ -103,6 +104,7 @@ def login(user, DBpath):
         entry_nuovoCommento.configure(state='disabled')
         pubblicabtn.configure(state='disabled')
         aggiornabtn.configure(state='disabled')
+        segnalabtn.configure(state='disabled')
         visualizzaAmici.configure(state='disabled')
         suggeriscibtn.configure(state='disabled')
     #except:
@@ -212,6 +214,7 @@ def logout():
     visualizzaFilmAmico.configure(state='disabled')
     pubblicabtn.configure(state='disabled')
     aggiornabtn.configure(state='disabled')
+    segnalabtn.configure(state='disabled')
     visualizzaAmici.configure(state='disabled')
     suggeriscibtn.configure(state='disabled')
 
@@ -1121,6 +1124,19 @@ def aggiorna():
 
 ###################################################################################################################
 
+def segnala(commentoSegnalato):
+    frasiSegnalate = open(database + "/frasiSegnalate.txt","a")
+    frasiSegnalate.write(commentoSegnalato)
+    frasiSegnalate.close()
+    finestraRingraziamento = tk.Toplevel()
+    finestraRingraziamento.wm_title("Window")
+    ringraziamento = tk.Label(finestraRingraziamento, text="Grazie per la tua segnalazione!")
+    ringraziamento.grid(row=0, column=0)
+    bottoneUscita = tk.Button(finestraRingraziamento, text="OK", command=finestraRingraziamento.destroy,width=10)
+    bottoneUscita.grid(row=1,column=0)
+
+###################################################################################################################
+
 ### funzione corrispondente suggeriscibtn (aggiorna i film suggeriti) 
 def aggiornaSuggerimenti():
     global utente
@@ -1564,7 +1580,7 @@ entry_nuovoCommento.configure(state='disabled')
 # textbox per bacheca
 txtbox_bacheca = tk.Text(tabHome, height=50, width=100, background=secondcolor)
 txtbox_bacheca.configure(state='disabled')
-txtbox_bacheca.grid(column=0, row=5)
+txtbox_bacheca.grid(column=0, row=6)
 
 # bottone per pubblicare
 pubblicabtn = tk.Button(tabHome, text="Pubblica", command=lambda: pubblica(entry_nuovoCommento.get()), width=20, background="gold")
@@ -1575,6 +1591,11 @@ pubblicabtn.configure(state='disabled')
 aggiornabtn = tk.Button(tabHome, text="Aggiorna", command=lambda: aggiorna(), width=20, background="gold")
 aggiornabtn.grid(column=0, row=4)
 aggiornabtn.configure(state='disabled')
+
+# bottone per segnalare un commento
+segnalabtn = tk.Button(tabHome, text="Segnala", command=lambda: segnala(entry_nuovoCommento.get()), width=20, background="gold")
+segnalabtn.grid(column=0, row=5)
+segnalabtn.configure(state='disabled')
 
 
 ###################################################################################################################
