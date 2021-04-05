@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 # Import dataset 
-dataset = pd.read_csv('C:/Users/simac/Google Drive/appCinefilia/train_frasiVolgari.txt', delimiter = '|')
+dataset = pd.read_csv(database + '/train_frasiVolgari.txt', delimiter = '|')
 
 #Stampo il numero delle righe del dataset
 numrows=dataset.shape[0]
@@ -50,7 +50,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 # experiment with to get better results 
 cv = CountVectorizer(max_features = 1500) 
 # X contains corpus (dependent variable) 
-X = cv.fit_transform(corpus).toarray() 
+X = cv.fit_transform(corpus).toarray()
+featureModelloFrasiVolgari = open("C:/Users/simac/Google Drive/appCinefilia/featureModelloFrasiVolgari.txt","w")
+features = cv.get_feature_names()
+for i in range(len(cv.get_feature_names())):
+	featureModelloFrasiVolgari.write(features[i] + "\n")
 # y contains answers if review 
 # is positive or negative 
 y = dataset.iloc[:, 1].values
@@ -68,6 +72,6 @@ model.fit(X,y)
 
 # Salvo il file del modello
 import pickle
-modelloFrasiVolgari = open ("C:/Users/simac/Google Drive/appCinefilia/modelloFrasiVolgari.pickle","wb")
+modelloFrasiVolgari = open (database + "/modelloFrasiVolgari.pickle","wb")
 pickle.dump(model,modelloFrasiVolgari)
 modelloFrasiVolgari.close()
