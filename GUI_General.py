@@ -1126,7 +1126,7 @@ def aggiorna():
 
 def segnala(commentoSegnalato):
     frasiSegnalate = open(database + "/frasiSegnalate.txt","a")
-    frasiSegnalate.write(commentoSegnalato)
+    frasiSegnalate.write(commentoSegnalato+"\n")
     frasiSegnalate.close()
     finestraRingraziamento = tk.Toplevel()
     finestraRingraziamento.wm_title("Window")
@@ -1253,7 +1253,7 @@ global utente
 global apikey
 
 
-apikey = "Insert valid Apikey"
+apikey = "Insert valid apikey"
 
 # finestra base
 root = tk.Tk()
